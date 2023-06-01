@@ -1,17 +1,16 @@
 # BSGImageLoader
 
-## Description
-A simple solution for asynchronous image loading based on notifications.
+## Overview
+A framework for asynchronous image loading based on notifications.
 
 https://github.com/brook-street-games/bsg-image-loader/assets/72933425/6bda4dc9-db41-4574-8889-f6ae0cb2db65
 
-## Requirements
-+ iOS 13+
-
 ## Installation
 
-### Swift Package Manager
+#### Requirements
++ iOS 13+
 
+#### Swift Package Manager
 1. Navigate to ***File->Add Packages***.
 3. Enter Package URL: https://github.com/brook-street-games/bsg-image-loader.git
 3. Select a dependency rule. **Up to Next Major** is recommended.
@@ -20,13 +19,12 @@ https://github.com/brook-street-games/bsg-image-loader/assets/72933425/6bda4dc9-
 
 ## Usage
 
-### Option #1: Use ImageLoaderView
-
+#### Option #1: Use ImageLoaderView
 ```swift
 /// Import the framework.
 import BSGImageLoader
 
-/// Create an instance of ImageLoader with the desired cache type.
+/// Create an instance of ImageLoader.
 let imageLoader = ImageLoader(cacheType: .disk)
 
 /// Create an instance of ImageLoaderView.
@@ -34,27 +32,18 @@ let imageLoaderView = ImageLoaderView()
 
 /// Load an image.
 imageLoaderView.load(<URL>, imageLoader: imageLoader)
-
-/// Optionally provide an activity indicator.
-let activityIndicator = UIActivityIndicatorView(style: .medium)
-activityIndicator.color = .systemGreen
-imageLoaderView.load(<URL>, imageLoader: imageLoader, activityIndicator: activityIndicator)
-
-/// Optionally provide a default image.
-imageLoaderView.load(<URL>, imageLoader: imageLoader, defaultImage: <UIImage>)
 ```
 
-### Option #2: Use ImageLoader Directly
-
+#### Option #2: Use ImageLoader Directly
 ```swift
 /// Import the framework.
 import BSGImageLoader
 
-/// Create an instance of ImageLoader with the desired cache type.
+/// Create an instance of ImageLoader.
 let imageLoader = ImageLoader(cacheType: .disk)
 
 /// Add an observer.
-ImageLoader.addObserver(<Any>, selector: <Selector>)
+ImageLoader.addObserver(self, selector: #selector(handleNotification))
 
 /// Load an image.
 imageLoader.load(<URL>)
@@ -76,13 +65,24 @@ imageLoader.load(<URL>)
 }
 ```
 
-## Configuration
+## Customization
 
-### Cache Types
+#### Cache Types
 * **None**. Images will not be cached.
 * **Memory**. Images will be cached to memory, using NSCache.
 * **Disk**. Images will be cached to disk in the ***documents/images*** directory.
 
-## Author
+#### Activity Indicator
+```swift
+let activityIndicator = UIActivityIndicatorView(style: .medium)
+activityIndicator.color = .systemGreen
+imageLoaderView.load(<URL>, imageLoader: imageLoader, activityIndicator: activityIndicator)
+```
 
+#### Default Image
+```swift
+imageLoaderView.load(<URL>, imageLoader: imageLoader, defaultImage: UIImage())
+```
+
+## Author
 Brook Street Games LLC

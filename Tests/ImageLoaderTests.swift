@@ -28,7 +28,7 @@ extension ImageLoaderTests {
 		ImageLoader.addObserver(self, selector: #selector(loadSuccessCompletion))
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
-		let imageLoader = ImageLoader(cacheType: .none)
+		let imageLoader = ImageLoader(cache: .none)
 		imageLoader.load(TestConstants.successImageURL1)
 		
 		waitForExpectations(timeout: TestConstants.waitTime)
@@ -49,7 +49,7 @@ extension ImageLoaderTests {
 		ImageLoader.addObserver(self, selector: #selector(loadFailureCompletion))
 		testLoadFailureExpectation = expectation(description: "Test load failure")
 		
-		let imageLoader = ImageLoader(cacheType: .none)
+		let imageLoader = ImageLoader(cache: .none)
 		imageLoader.load(TestConstants.failureImageURL)
 		
 		waitForExpectations(timeout: TestConstants.waitTime)
@@ -73,7 +73,7 @@ extension ImageLoaderTests {
 	func testCreateDiskCacheDirectory() {
 		
 		try? FileManager.default.removeItem(atPath: ImageLoader.Constants.diskCacheDirectory.path)
-		_ = ImageLoader(cacheType: .disk)
+		_ = ImageLoader(cache: .disk)
 		XCTAssertTrue(FileManager.default.fileExists(atPath: ImageLoader.Constants.diskCacheDirectory.path))
 	}
 	
@@ -81,7 +81,7 @@ extension ImageLoaderTests {
 		
 		testDiskCacheExpectation = expectation(description: "Test disk cache")
 		
-		let imageLoader = ImageLoader(cacheType: .disk)
+		let imageLoader = ImageLoader(cache: .disk)
 		imageLoader.clearCache()
 		imageLoader.load(TestConstants.successImageURL1)
 		imageLoader.load(TestConstants.successImageURL2)

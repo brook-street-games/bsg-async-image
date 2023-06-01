@@ -25,9 +25,9 @@ final class SampleViewModel {
 	
 	private var images = [SampleImage]()
 	private(set) var displayedImages = [SampleImage]()
-	private lazy var imageLoaderCacheNone = ImageLoader(cacheType: .none)
-	private lazy var imageLoaderCacheMemory = ImageLoader(cacheType: .memory)
-	private lazy var imageLoaderCacheDisk = ImageLoader(cacheType: .disk)
+	private lazy var imageLoaderCacheNone = ImageLoader(cache: .none)
+	private lazy var imageLoaderCacheMemory = ImageLoader(cache: .memory)
+	private lazy var imageLoaderCacheDisk = ImageLoader(cache: .disk)
 	
 	var selectedCacheTypeIndex: Int { UserDefaults.standard.integer(forKey: Constants.cacheTypeKey) }
 	var selectedCacheType: ImageLoader.CacheType { cacheType(for: selectedCacheTypeIndex) }

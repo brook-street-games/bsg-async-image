@@ -25,7 +25,7 @@ https://github.com/brook-street-games/bsg-image-loader/assets/72933425/6bda4dc9-
 import BSGImageLoader
 
 /// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cacheType: .disk)
+let imageLoader = ImageLoader(cache: .disk)
 
 /// Create an instance of ImageLoaderView.
 let imageLoaderView = ImageLoaderView()
@@ -40,7 +40,7 @@ imageLoaderView.load(<URL>, imageLoader: imageLoader)
 import BSGImageLoader
 
 /// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cacheType: .disk)
+let imageLoader = ImageLoader(cache: .disk)
 
 /// Add an observer.
 ImageLoader.addObserver(self, selector: #selector(handleNotification))

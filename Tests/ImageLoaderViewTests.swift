@@ -26,7 +26,7 @@ extension ImageLoaderViewTests {
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
 		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.successImageURL1, imageLoader: ImageLoader(cacheType: .none))
+		imageView.load(TestConstants.successImageURL1, imageLoader: ImageLoader(cache: .none))
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
 			if imageView.image != nil { self.testLoadSuccessExpectation?.fulfill() }
@@ -39,7 +39,7 @@ extension ImageLoaderViewTests {
 		testLoadFailureExpectation = expectation(description: "Test load failure")
 		
 		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cacheType: .none))
+		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cache: .none))
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
 			if imageView.image == nil { self.testLoadFailureExpectation?.fulfill() }
@@ -53,7 +53,7 @@ extension ImageLoaderViewTests {
 		
 		let defaultImage = UIImage(systemName: "person")
 		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cacheType: .none), defaultImage: defaultImage)
+		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cache: .none), defaultImage: defaultImage)
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
 			if imageView.image == defaultImage { self.testDefaultImageExpectation?.fulfill() }

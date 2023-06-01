@@ -56,10 +56,10 @@ public final class ImageLoader {
 	
 	// MARK: - Initializers -
 	
-	public init(cacheType: CacheType) {
+	public init(cache: CacheType) {
 		
-		self.cacheType = cacheType
-		if cacheType == .disk { createCacheDirectory() }
+		self.cacheType = cache
+		if cache == .disk { createCacheDirectory() }
 	}
 }
 

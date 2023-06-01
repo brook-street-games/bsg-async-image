@@ -3,7 +3,7 @@
 ## Description
 A simple solution for asynchronous image loading based on notifications.
 
-![BSGImageLoader](../main/Demo/BSGImageLoaderSample.mp4)
+https://github.com/brook-street-games/bsg-image-loader/assets/72933425/6bda4dc9-db41-4574-8889-f6ae0cb2db65
 
 ## Requirements
 + iOS 13+

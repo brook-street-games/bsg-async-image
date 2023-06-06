@@ -40,7 +40,7 @@ final class SampleCell: UICollectionViewCell {
 		let label = UILabel()
 		label.backgroundColor = label.systemBackgroundInverse
 		label.textColor = .systemBackground
-		label.font = UIFont(name: "Marker Felt", size: Constants.fontSize)
+		label.font = UIFont(name: "Lexend", size: Constants.fontSize)
 		label.textAlignment = .center
 		return label
 	}()

@@ -44,7 +44,7 @@ final class SampleViewController: UIViewController {
 		let button = UIButton()
 		button.backgroundColor = button.systemBackgroundInverse
 		button.setTitleColor(.systemBackground, for: .normal)
-		button.titleLabel?.font = UIFont(name: "Marker Felt", size: Constants.fontSize)
+		button.titleLabel?.font = UIFont(name: "Lexend", size: Constants.fontSize)
 		button.titleLabel?.textAlignment = .center
 		button.titleLabel?.numberOfLines = 0
 		button.roundCorners()
@@ -56,7 +56,7 @@ final class SampleViewController: UIViewController {
 	private var cacheControl: UISegmentedControl = {
 		
 		let segmentedControl = UISegmentedControl(items: ["None", "Memory", "Disk"])
-		segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Marker Felt", size: Constants.fontSize)!, NSAttributedString.Key.foregroundColor: UIColor.systemBackground], for: .normal)
+		segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Lexend", size: Constants.fontSize)!, NSAttributedString.Key.foregroundColor: UIColor.systemBackground], for: .normal)
 		segmentedControl.selectedSegmentTintColor = .systemCyan
 		segmentedControl.backgroundColor = segmentedControl.systemBackgroundInverse
 		

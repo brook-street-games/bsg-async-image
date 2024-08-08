@@ -11,8 +11,10 @@ import UIKit
 ///
 /// A class used for asynchronous image loading.
 ///
-public final class ImageLoader {
+public final class AsyncImageService: AsyncImageServiceProtocol {
 	
+    // MARK: - Constants -
+    
 	public struct Constants {
 		/// The name of the notification posted when an image is loaded.
 		public static let notificationName = "bsg.image"
@@ -20,20 +22,6 @@ public final class ImageLoader {
 		public static let notificationInfoParameter = "info"
 		/// The cache directory when **cacheType** is set to disk.
 		public static let diskCacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("bsg/images")
-	}
-	
-	public enum CacheType {
-		/// Images will not be cached.
-		case none
-		/// Images will be cached to memory.
-		case memory
-		/// Images will be cached to disk under *documents/images*.
-		case disk
-	}
-	
-	public struct NotificationInfo {
-		public var url: URL
-		public var result: Result<UIImage, Error>
 	}
 	
 	public enum Error: Swift.Error {
@@ -51,7 +39,7 @@ public final class ImageLoader {
 	private lazy var fileManager = FileManager.default
 	/// Contains all URLs with an open data task.
     private var activeRequests = Set<URL>()
-	/// Contains cached images when *cacheType* is set to memory.
+	/// Contains all images cached in memory.
 	private var memoryCache = NSCache<NSString, UIImage>()
 	
 	// MARK: - Initializers -
@@ -64,7 +52,7 @@ public final class ImageLoader {
 
 // MARK: - Image Load -
 
-extension ImageLoader {
+extension AsyncImageService {
 	
     ///
     /// Load an image. If *cacheType* is set to a value other than none and the image has been previously loaded, it will be taken from cache. When an image is loaded **imageLoaderNotification** will be posted containing a **NotificationInfo** which can be used to obtain the loaded image.
@@ -105,8 +93,17 @@ extension ImageLoader {
 
 // MARK: - Cache -
 
-extension ImageLoader {
+extension AsyncImageService {
 	
+    public enum CacheType {
+        /// Images will not be cached.
+        case none
+        /// Images will be cached to memory.
+        case memory
+        /// Images will be cached to disk under *documents/images*.
+        case disk
+    }
+    
 	///
 	/// Create a directory for disk cache.
 	///
@@ -174,7 +171,7 @@ extension ImageLoader {
 
 // MARK: - File Name -
 
-extension ImageLoader {
+extension AsyncImageService {
 	
 	///
 	/// Remove forward slashes from URL to create a disk-friendly file name.
@@ -189,8 +186,13 @@ extension ImageLoader {
 
 // MARK: - Notification -
 
-extension ImageLoader {
+extension AsyncImageService {
 	
+    public struct NotificationInfo {
+        public var url: URL
+        public var result: Result<UIImage, Error>
+    }
+    
 	///
 	/// Add an observer to *all* instances of **ImageLoader**.
 	/// - warning: Calling this method more than once will result in duplicate notifications.

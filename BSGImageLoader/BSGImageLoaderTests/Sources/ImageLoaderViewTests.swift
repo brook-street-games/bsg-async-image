@@ -25,7 +25,7 @@ extension ImageLoaderViewTests {
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
         let successImageView = UIImageView(image: UIImage(systemName: "checkmark"))
-        let imageView = AsyncImageView(url: Constants.successImageURL1, loader: ImageLoader(cacheType: .none), phaseHandler: { phase in
+        let imageView = AsyncImageView(url: Constants.successImageURL1, loader: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
             case .success: return successImageView
             default: return UIView()
@@ -43,7 +43,7 @@ extension ImageLoaderViewTests {
         testLoadFailureExpectation = expectation(description: "Test load failure")
         
         let failureImageView = UIImageView(image: UIImage(systemName: "xmark"))
-        let imageView = AsyncImageView(url: Constants.failureImageURL, loader: ImageLoader(cacheType: .none), phaseHandler: { phase in
+        let imageView = AsyncImageView(url: Constants.failureImageURL, loader: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
             case .failure: return failureImageView
             default: return UIView()

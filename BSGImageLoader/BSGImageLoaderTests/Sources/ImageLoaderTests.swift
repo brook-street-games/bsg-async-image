@@ -25,17 +25,17 @@ final class ImageLoaderTests: XCTestCase {
 extension ImageLoaderTests {
 	
 	func testLoadSuccess() {
-		ImageLoader.addObserver(self, selector: #selector(loadSuccessCompletion))
+		AsyncImageService.addObserver(self, selector: #selector(loadSuccessCompletion))
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
-		let imageLoader = ImageLoader(cacheType: .none)
+		let imageLoader = AsyncImageService(cacheType: .none)
 		imageLoader.load(Constants.successImageURL1)
 		
 		waitForExpectations(timeout: waitTime)
 	}
 	
 	@objc func loadSuccessCompletion(_ notification: Notification) {
-		guard let result = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
+		guard let result = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo else { return }
 		
 		if case .success = result.result, result.url == Constants.successImageURL1 {
 			self.testLoadSuccessExpectation?.fulfill()
@@ -44,17 +44,17 @@ extension ImageLoaderTests {
 	}
 	
 	func testLoadFailure() {
-		ImageLoader.addObserver(self, selector: #selector(loadFailureCompletion))
+		AsyncImageService.addObserver(self, selector: #selector(loadFailureCompletion))
 		testLoadFailureExpectation = expectation(description: "Test load failure")
 		
-		let imageLoader = ImageLoader(cacheType: .none)
+		let imageLoader = AsyncImageService(cacheType: .none)
 		imageLoader.load(Constants.failureImageURL)
 		
 		waitForExpectations(timeout: waitTime)
 	}
 	
 	@objc func loadFailureCompletion(_ notification: Notification) {
-		guard let result = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
+		guard let result = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo else { return }
 		
 		if case .failure(let error) = result.result, result.url == Constants.failureImageURL, error == .imageLoadFailed {
 			self.testLoadFailureExpectation?.fulfill()
@@ -68,15 +68,15 @@ extension ImageLoaderTests {
 extension ImageLoaderTests {
 	
 	func testCreateDiskCacheDirectory() {
-		try? FileManager.default.removeItem(atPath: ImageLoader.Constants.diskCacheDirectory.path)
-		_ = ImageLoader(cacheType: .disk)
-		XCTAssertTrue(FileManager.default.fileExists(atPath: ImageLoader.Constants.diskCacheDirectory.path))
+		try? FileManager.default.removeItem(atPath: AsyncImageService.Constants.diskCacheDirectory.path)
+		_ = AsyncImageService(cacheType: .disk)
+		XCTAssertTrue(FileManager.default.fileExists(atPath: AsyncImageService.Constants.diskCacheDirectory.path))
 	}
 	
 	func testDiskCache() {
 		testDiskCacheExpectation = expectation(description: "Test disk cache")
 		
-		let imageLoader = ImageLoader(cacheType: .disk)
+		let imageLoader = AsyncImageService(cacheType: .disk)
 		imageLoader.clearCache()
 		imageLoader.load(Constants.successImageURL1)
 		imageLoader.load(Constants.successImageURL2)
@@ -84,7 +84,7 @@ extension ImageLoaderTests {
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
 			
-			guard let contents = try? FileManager.default.contentsOfDirectory(at: ImageLoader.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
+			guard let contents = try? FileManager.default.contentsOfDirectory(at: AsyncImageService.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
 			
 			guard contents.count == 3 else {
 				XCTAssertEqual(contents.count, 3)

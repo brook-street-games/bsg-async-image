@@ -23,7 +23,7 @@ final class SampleCell: UICollectionViewCell {
     // MARK: - Properties -
     
     private var image: SampleImage!
-    private var imageLoader: ImageLoader!
+    private var imageLoader: AsyncImageService!
 	
     // MARK: - UI -
     
@@ -47,7 +47,7 @@ final class SampleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-	func configure(image: SampleImage, imageLoader: ImageLoader) {
+	func configure(image: SampleImage, imageLoader: AsyncImageService) {
         self.image = image
         self.imageLoader = imageLoader
 		

@@ -20,15 +20,15 @@ public class AsyncImageViewModel: ObservableObject {
     // MARK: - Properties -
     
     let url: URL
-    let imageLoader: ImageLoader
+    let imageService: AsyncImageServiceProtocol
     @Published var phase: Phase = .empty
     
     // MARK: - Initializers -
     
-    public init(url: URL, imageLoader: ImageLoader) {
+    public init(url: URL, imageService: AsyncImageServiceProtocol) {
         self.url = url
-        self.imageLoader = imageLoader
-        ImageLoader.addObserver(self, selector: #selector(handleImage))
+        self.imageService = imageService
+        AsyncImageService.addObserver(self, selector: #selector(handleImage))
     }
 }
 
@@ -37,7 +37,7 @@ public class AsyncImageViewModel: ObservableObject {
 extension AsyncImageViewModel {
     
     func imageAppeared() {
-        imageLoader.load(url)
+        imageService.load(url)
     }
 }
 
@@ -46,7 +46,7 @@ extension AsyncImageViewModel {
 extension AsyncImageViewModel {
  
     @objc private func handleImage(_ notification: Notification) {
-        guard let info = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
+        guard let info = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo else { return }
         guard info.url == url else { return }
 
         switch info.result {

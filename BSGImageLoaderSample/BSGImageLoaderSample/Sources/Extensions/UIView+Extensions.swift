@@ -7,14 +7,20 @@
 
 import UIKit
 
+// MARK: - Color -
+
 extension UIView {
-	
-	func roundCorners() {
-		clipsToBounds = true
-		layer.cornerRadius = 10
-	}
-	
 	var systemBackgroundInverse: UIColor { traitCollection.userInterfaceStyle == .light ? .black : .white }
+}
+
+// MARK: - Shape -
+
+extension UIView {
+    
+    func roundCorners() {
+        clipsToBounds = true
+        layer.cornerRadius = 10
+    }
 }
 
 // MARK: - Progress Indicator -

@@ -16,8 +16,8 @@ public struct AsyncImage<Content: View>: View {
     
     // MARK: - Initializers -
     
-    public init(url: URL, loader: ImageLoader, @ViewBuilder phaseHandler: @escaping (AsyncImageViewModel.Phase) -> Content) {
-        self.viewModel = AsyncImageViewModel(url: url, imageLoader: loader)
+    public init(url: URL, imageService: AsyncImageServiceProtocol, @ViewBuilder phaseHandler: @escaping (AsyncImageViewModel.Phase) -> Content) {
+        self.viewModel = AsyncImageViewModel(url: url, imageService: imageService)
         self.phaseHandler = phaseHandler
     }
     
@@ -35,8 +35,8 @@ public struct AsyncImage<Content: View>: View {
 
 #Preview {
     let url = Constants.successImageURL1
-    let loader = ImageLoader(cacheType: .memory)
-    return AsyncImage(url: url, loader: loader) { phase in
+    let imageService = AsyncImageService(cacheType: .memory)
+    return AsyncImage(url: url, imageService: imageService) { phase in
         switch phase {
         case .empty: Rectangle().foregroundStyle(.black)
         case .success(let image): image.resizable().aspectRatio(contentMode: .fill)

@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:BSGImageLoader.xcodeproj">
+      location = "group:BSGImageLoader/BSGImageLoader.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Sample/BSGImageLoaderSample.xcodeproj">
+      location = "group:BSGImageLoader/../BSGImageLoaderSample/BSGImageLoaderSample.xcodeproj">
    </FileRef>
 </Workspace>

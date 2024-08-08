@@ -25,14 +25,14 @@ final class SampleViewModel {
 	
 	private var images = [SampleImage]()
 	private(set) var displayedImages = [SampleImage]()
-	private lazy var imageLoaderCacheNone = ImageLoader(cacheType: .none)
-	private lazy var imageLoaderCacheMemory = ImageLoader(cacheType: .memory)
-	private lazy var imageLoaderCacheDisk = ImageLoader(cacheType: .disk)
+	private lazy var imageLoaderCacheNone = AsyncImageService(cacheType: .none)
+	private lazy var imageLoaderCacheMemory = AsyncImageService(cacheType: .memory)
+	private lazy var imageLoaderCacheDisk = AsyncImageService(cacheType: .disk)
 	
 	var selectedCacheTypeIndex: Int { UserDefaults.standard.integer(forKey: Constants.cacheTypeKey) }
-	var selectedCacheType: ImageLoader.CacheType { cacheType(for: selectedCacheTypeIndex) }
+	var selectedCacheType: AsyncImageService.CacheType { cacheType(for: selectedCacheTypeIndex) }
 	
-	var imageLoader: ImageLoader {
+	var imageLoader: AsyncImageService {
 		switch selectedCacheType {
 		case .none: return imageLoaderCacheNone
 		case .memory: return imageLoaderCacheMemory
@@ -47,7 +47,7 @@ extension SampleViewModel {
 	
 	func loadImages(completion: @escaping () -> Void) {
 		
-		debugPrint("Disk cache directory: \(ImageLoader.Constants.diskCacheDirectory)")
+		debugPrint("Disk cache directory: \(AsyncImageService.Constants.diskCacheDirectory)")
 		
 		let dataTask = URLSession(configuration: .ephemeral).dataTask(with: Constants.sampleImageURL) { data, response, error in
 			
@@ -74,7 +74,7 @@ extension SampleViewModel {
 		UserDefaults.standard.set(index, forKey: Constants.cacheTypeKey)
 	}
 	
-	private func cacheType(for index: Int) -> ImageLoader.CacheType {
+	private func cacheType(for index: Int) -> AsyncImageService.CacheType {
 		
 		switch index {
 		case 0: return .none

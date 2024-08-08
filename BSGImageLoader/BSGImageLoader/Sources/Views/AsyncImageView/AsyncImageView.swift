@@ -24,19 +24,19 @@ public class AsyncImageView<Content: UIView>: UIImageView {
     // MARK: - Properties -
     
     private let url: URL
-    private let loader: ImageLoader
+    private let loader: AsyncImageService
     private let phaseHandler: (Phase) -> Content
     private var phase: Phase = .empty { didSet { refresh() }}
     
     // MARK: - Initializers -
     
-    public init(url: URL, loader: ImageLoader, phaseHandler: @escaping (Phase) -> Content) {
+    public init(url: URL, loader: AsyncImageService, phaseHandler: @escaping (Phase) -> Content) {
         self.url = url
         self.loader = loader
         self.phaseHandler = phaseHandler
         
         super.init(frame: CGRect.zero)
-        ImageLoader.addObserver(self, selector: #selector(handleNotification))
+        AsyncImageService.addObserver(self, selector: #selector(handleNotification))
         refresh()
     }
     
@@ -52,7 +52,7 @@ public class AsyncImageView<Content: UIView>: UIImageView {
     /// - parameter notification: A notification posted after an image completes loading.
     ///
     @objc private func handleNotification(_ notification: Notification) {
-        guard let info = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo, info.url == url else { return }
+        guard let info = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo, info.url == url else { return }
         
         switch info.result {
         case .success(let image): phase = .success(image)

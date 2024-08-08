@@ -15,11 +15,11 @@ public final class ImageLoader {
 	
 	public struct Constants {
 		/// The name of the notification posted when an image is loaded.
-		public static let notificationName = "imageLoaderNotification"
+		public static let notificationName = "bsg.image"
 		/// The notification parameter containing a **NotificationInfo** object.
 		public static let notificationInfoParameter = "info"
 		/// The cache directory when **cacheType** is set to disk.
-		public static let diskCacheDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("images")
+		public static let diskCacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("bsg/images")
 	}
 	
 	public enum CacheType {
@@ -56,10 +56,9 @@ public final class ImageLoader {
 	
 	// MARK: - Initializers -
 	
-	public init(cache: CacheType) {
-		
-		self.cacheType = cache
-		if cache == .disk { createCacheDirectory() }
+	public init(cacheType: CacheType) {
+		self.cacheType = cacheType
+		if cacheType == .disk { createCacheDirectory() }
 	}
 }
 
@@ -112,7 +111,6 @@ extension ImageLoader {
 	/// Create a directory for disk cache.
 	///
 	private func createCacheDirectory() {
-		
 		do {
 			try fileManager.createDirectory(at: Constants.diskCacheDirectory, withIntermediateDirectories: true, attributes: [:])
 		} catch {
@@ -131,7 +129,6 @@ extension ImageLoader {
 		guard let imageName = fileName(for: url) else { return }
 		
 		switch cacheType {
-			
 		case .none: break
 		case .memory: memoryCache.setObject(image, forKey: imageName as NSString)
 		case .disk:
@@ -152,7 +149,6 @@ extension ImageLoader {
 		guard let imageName = fileName(for: url) else { return nil }
 		
 		switch cacheType {
-			
 		case .none: return nil
 		case .memory: return memoryCache.object(forKey: imageName as NSString)
 		case .disk:

@@ -23,20 +23,12 @@ final class SampleCell: UICollectionViewCell {
     // MARK: - Properties -
     
     private var image: SampleImage!
+    private var imageLoader: ImageLoader!
 	
     // MARK: - UI -
     
-    /// Displays an image.
-    private lazy var imageView: ImageLoaderView = {
-		
-		let imageView = ImageLoaderView()
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-	
 	/// Displays the name of an image.
-	private var nameLabel: UILabel = {
-		
+	private lazy var nameLabel: UILabel = {
 		let label = UILabel()
 		label.backgroundColor = label.systemBackgroundInverse
 		label.textColor = .systemBackground
@@ -48,49 +40,61 @@ final class SampleCell: UICollectionViewCell {
     // MARK: - Setup -
     
     override init(frame: CGRect) {
-        
         super.init(frame: frame)
-        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setup() {
-		
-		addSubview(imageView)
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-		
-		addSubview(nameLabel)
-		nameLabel.translatesAutoresizingMaskIntoConstraints = false
-		
-		addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
-		addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[nameLabel]|", metrics: nil, views: ["nameLabel": nameLabel]))
-		addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
-		addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=labelHeight)-[nameLabel(==labelHeight)]|", metrics: ["labelHeight": Constants.labelHeight], views: ["nameLabel": nameLabel]))
-		
-        roundCorners()
-    }
-    
 	func configure(image: SampleImage, imageLoader: ImageLoader) {
-        
         self.image = image
+        self.imageLoader = imageLoader
 		
 		backgroundColor = systemBackgroundInverse
+        roundCorners()
+        
+        let imageView = createImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.load()
+        addSubview(imageView)
+        
+        addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
 		nameLabel.isHidden = image.name == nil
 		nameLabel.text = image.name
 		
-		let activityIndicator = UIActivityIndicatorView(style: .medium)
-		activityIndicator.color = .systemBackground
-		imageView.load(image.url, imageLoader: imageLoader, activityIndicator: activityIndicator)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[nameLabel]|", metrics: nil, views: ["nameLabel": nameLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]|", metrics: nil, views: ["imageView": imageView]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=labelHeight)-[nameLabel(==labelHeight)]|", metrics: ["labelHeight": Constants.labelHeight], views: ["nameLabel": nameLabel]))
     }
 	
 	override func prepareForReuse() {
-		
 		super.prepareForReuse()
-		
-		imageView.image = nil
-		nameLabel.isHidden = true
+        for subview in subviews { subview.removeFromSuperview() }
 	}
+}
+
+// MARK: - Image View -
+
+extension SampleCell {
+    
+    private func createImageView() -> AsyncImageView<UIView> {
+        return AsyncImageView(url: image.url, loader: imageLoader) { phase in
+            switch phase {
+            case .empty:
+                let activityIndicator = UIActivityIndicatorView(style: .medium)
+                activityIndicator.color = .systemBackground
+                activityIndicator.startAnimating()
+                return activityIndicator
+            case .success(let image):
+                let imageView = UIImageView(image: image)
+                imageView.contentMode = .scaleAspectFill
+                return imageView
+            case .failure:
+                return UIView()
+            }
+        }
+    }
 }

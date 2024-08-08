@@ -10,6 +10,7 @@ import XCTest
 
 final class ImageLoaderTests: XCTestCase {
 	
+    private let waitTime: TimeInterval = 3.0
 	private var testLoadSuccessExpectation: XCTestExpectation?
 	private var testLoadFailureExpectation: XCTestExpectation?
 	private var testDiskCacheExpectation: XCTestExpectation?
@@ -24,42 +25,38 @@ final class ImageLoaderTests: XCTestCase {
 extension ImageLoaderTests {
 	
 	func testLoadSuccess() {
-		
 		ImageLoader.addObserver(self, selector: #selector(loadSuccessCompletion))
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
-		let imageLoader = ImageLoader(cache: .none)
-		imageLoader.load(TestConstants.successImageURL1)
+		let imageLoader = ImageLoader(cacheType: .none)
+		imageLoader.load(Constants.successImageURL1)
 		
-		waitForExpectations(timeout: TestConstants.waitTime)
+		waitForExpectations(timeout: waitTime)
 	}
 	
 	@objc func loadSuccessCompletion(_ notification: Notification) {
-		
 		guard let result = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
 		
-		if case .success = result.result, result.url == TestConstants.successImageURL1 {
+		if case .success = result.result, result.url == Constants.successImageURL1 {
 			self.testLoadSuccessExpectation?.fulfill()
 			self.testLoadSuccessExpectation = nil
 		}
 	}
 	
 	func testLoadFailure() {
-		
 		ImageLoader.addObserver(self, selector: #selector(loadFailureCompletion))
 		testLoadFailureExpectation = expectation(description: "Test load failure")
 		
-		let imageLoader = ImageLoader(cache: .none)
-		imageLoader.load(TestConstants.failureImageURL)
+		let imageLoader = ImageLoader(cacheType: .none)
+		imageLoader.load(Constants.failureImageURL)
 		
-		waitForExpectations(timeout: TestConstants.waitTime)
+		waitForExpectations(timeout: waitTime)
 	}
 	
 	@objc func loadFailureCompletion(_ notification: Notification) {
-		
 		guard let result = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
 		
-		if case .failure(let error) = result.result, result.url == TestConstants.failureImageURL, error == .imageLoadFailed {
+		if case .failure(let error) = result.result, result.url == Constants.failureImageURL, error == .imageLoadFailed {
 			self.testLoadFailureExpectation?.fulfill()
 			self.testLoadFailureExpectation = nil
 		}
@@ -71,23 +68,21 @@ extension ImageLoaderTests {
 extension ImageLoaderTests {
 	
 	func testCreateDiskCacheDirectory() {
-		
 		try? FileManager.default.removeItem(atPath: ImageLoader.Constants.diskCacheDirectory.path)
-		_ = ImageLoader(cache: .disk)
+		_ = ImageLoader(cacheType: .disk)
 		XCTAssertTrue(FileManager.default.fileExists(atPath: ImageLoader.Constants.diskCacheDirectory.path))
 	}
 	
 	func testDiskCache() {
-		
 		testDiskCacheExpectation = expectation(description: "Test disk cache")
 		
-		let imageLoader = ImageLoader(cache: .disk)
+		let imageLoader = ImageLoader(cacheType: .disk)
 		imageLoader.clearCache()
-		imageLoader.load(TestConstants.successImageURL1)
-		imageLoader.load(TestConstants.successImageURL2)
-		imageLoader.load(TestConstants.successImageURL3)
+		imageLoader.load(Constants.successImageURL1)
+		imageLoader.load(Constants.successImageURL2)
+		imageLoader.load(Constants.successImageURL3)
 		
-		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
 			
 			guard let contents = try? FileManager.default.contentsOfDirectory(at: ImageLoader.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
 			
@@ -99,6 +94,6 @@ extension ImageLoaderTests {
 			self.testDiskCacheExpectation?.fulfill()
 		}
 		
-		waitForExpectations(timeout: TestConstants.waitTime)
+		waitForExpectations(timeout: waitTime)
 	}
 }

@@ -16,7 +16,6 @@ final class SampleViewController: UIViewController {
     // MARK: - Constants -
     
     private struct Constants {
-		
 		static let spacing: CGFloat = 12
 		static let fontSize: CGFloat = 16
 		static let buttonHeight: CGFloat = 50
@@ -30,7 +29,6 @@ final class SampleViewController: UIViewController {
 	private var viewModel: SampleViewModel
 	
 	private lazy var cellSize: CGSize = {
-		
 		let availableSpace = min(view.bounds.width, view.bounds.height)
 		let emptySpace = Constants.spacing * CGFloat(Constants.portraitColumns + 1)
 		let cellWidth = (availableSpace - emptySpace) / CGFloat(Constants.portraitColumns)
@@ -40,7 +38,6 @@ final class SampleViewController: UIViewController {
     // MARK: - UI -
     
 	private var button: UIButton {
-		
 		let button = UIButton()
 		button.backgroundColor = button.systemBackgroundInverse
 		button.setTitleColor(.systemBackground, for: .normal)
@@ -54,7 +51,6 @@ final class SampleViewController: UIViewController {
 	}
 	
 	private var cacheControl: UISegmentedControl = {
-		
 		let segmentedControl = UISegmentedControl(items: ["None", "Memory", "Disk"])
 		segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Lexend", size: Constants.fontSize)!, NSAttributedString.Key.foregroundColor: UIColor.systemBackground], for: .normal)
 		segmentedControl.selectedSegmentTintColor = .systemCyan
@@ -64,7 +60,6 @@ final class SampleViewController: UIViewController {
 	}()
 	
     private var collectionView: UICollectionView = {
-        
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = Constants.spacing
         layout.minimumInteritemSpacing = Constants.spacing
@@ -76,7 +71,6 @@ final class SampleViewController: UIViewController {
     // MARK: - Setup -
     
 	init(viewModel: SampleViewModel) {
-		
 		self.viewModel = viewModel
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -86,17 +80,21 @@ final class SampleViewController: UIViewController {
 	}
 	
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         setup()
 		
+        let activityIndictor = UIActivityIndicatorView()
+        activityIndictor.color = collectionView.systemBackgroundInverse
+        collectionView.showActivityIndicator(activityIndictor)
+        
 		viewModel.loadImages {
-			DispatchQueue.main.async { self.refresh() }
+            DispatchQueue.main.async {
+                self.refresh()
+            }
 		}
     }
 	
 	private func setup() {
-		
 		let refreshButton = button
 		refreshButton.setTitle("Refresh\n(Same Images)", for: .normal)
 		refreshButton.addTarget(self, action: #selector(refresh), for: .touchUpInside)
@@ -147,7 +145,6 @@ extension SampleViewController {
 	}
 	
 	private func animate(_ sender: UIButton, transform: CGAffineTransform) {
-		
 		UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseInOut], animations: {
 			sender.transform = transform
 		})
@@ -163,7 +160,6 @@ extension SampleViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sampleCell", for: indexPath) as! SampleCell
 		cell.configure(image: viewModel.displayedImages[indexPath.row], imageLoader: viewModel.imageLoader)
         return cell
@@ -179,23 +175,21 @@ extension SampleViewController: UICollectionViewDataSource, UICollectionViewDele
 extension SampleViewController {
 	
 	@objc private func refresh() {
+        collectionView.hideActivityIndicator()
 		collectionView.reloadData()
 	}
 	
 	@objc private func reroll() {
-		
 		viewModel.rollImages()
 		refresh()
 	}
 	
 	@objc private func setCacheType(_ sender: UISegmentedControl) {
-		
 		viewModel.setCacheType(index: sender.selectedSegmentIndex)
 		refresh()
 	}
 	
 	@objc private func clearCache() {
-		
 		viewModel.clearCache()
 		refresh()
 	}

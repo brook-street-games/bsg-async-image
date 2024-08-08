@@ -10,9 +10,9 @@ import XCTest
 
 final class ImageLoaderViewTests: XCTestCase {
 	
+    private let waitTime: TimeInterval = 3.0
 	private var testLoadSuccessExpectation: XCTestExpectation?
 	private var testLoadFailureExpectation: XCTestExpectation?
-	private var testDefaultImageExpectation: XCTestExpectation?
 	
 	override func setUp() {
 		NotificationCenter.default.removeObserver(self)
@@ -22,42 +22,38 @@ final class ImageLoaderViewTests: XCTestCase {
 extension ImageLoaderViewTests {
 	
 	func testLoadSuccess() {
-		
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
-		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.successImageURL1, imageLoader: ImageLoader(cache: .none))
+        let successImageView = UIImageView(image: UIImage(systemName: "checkmark"))
+        let imageView = AsyncImageView(url: Constants.successImageURL1, loader: ImageLoader(cacheType: .none), phaseHandler: { phase in
+            switch phase {
+            case .success: return successImageView
+            default: return UIView()
+            }
+        })
+		imageView.load()
 		
-		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
-			if imageView.image != nil { self.testLoadSuccessExpectation?.fulfill() }
+		DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            if imageView.subviews.contains(successImageView) { self.testLoadSuccessExpectation?.fulfill() }
 		}
-		waitForExpectations(timeout: TestConstants.waitTime)
+		waitForExpectations(timeout: waitTime)
 	}
 	
 	func testLoadFailure() {
-		
-		testLoadFailureExpectation = expectation(description: "Test load failure")
-		
-		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cache: .none))
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
-			if imageView.image == nil { self.testLoadFailureExpectation?.fulfill() }
-		}
-		waitForExpectations(timeout: TestConstants.waitTime)
-	}
-	
-	func testDefaultImage() {
-		
-		testDefaultImageExpectation = expectation(description: "Test default image")
-		
-		let defaultImage = UIImage(systemName: "person")
-		let imageView = ImageLoaderView()
-		imageView.load(TestConstants.failureImageURL, imageLoader: ImageLoader(cache: .none), defaultImage: defaultImage)
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + TestConstants.waitTime) {
-			if imageView.image == defaultImage { self.testDefaultImageExpectation?.fulfill() }
-		}
-		waitForExpectations(timeout: TestConstants.waitTime)
+        testLoadFailureExpectation = expectation(description: "Test load failure")
+        
+        let failureImageView = UIImageView(image: UIImage(systemName: "xmark"))
+        let imageView = AsyncImageView(url: Constants.failureImageURL, loader: ImageLoader(cacheType: .none), phaseHandler: { phase in
+            switch phase {
+            case .failure: return failureImageView
+            default: return UIView()
+            }
+        })
+        imageView.load()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            if imageView.subviews.contains(failureImageView) { self.testLoadFailureExpectation?.fulfill() }
+        }
+        waitForExpectations(timeout: waitTime)
 	}
 }

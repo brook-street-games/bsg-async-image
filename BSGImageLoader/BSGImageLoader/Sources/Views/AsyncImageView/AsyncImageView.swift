@@ -6,10 +6,9 @@
 //
 
 import UIKit
-import SwiftUI
 
 ///
-/// A subclass of **UIImageView** that provides the asynchronous loading capabilities of **ImageLoader**.
+/// A view used to load and cache asynchronous images in UIKit.
 ///
 public class AsyncImageView<Content: UIView>: UIImageView {
     
@@ -24,19 +23,19 @@ public class AsyncImageView<Content: UIView>: UIImageView {
     // MARK: - Properties -
     
     private let url: URL
-    private let loader: AsyncImageService
+    private let imageService: AsyncImageServiceProtocol
     private let phaseHandler: (Phase) -> Content
     private var phase: Phase = .empty { didSet { refresh() }}
     
     // MARK: - Initializers -
     
-    public init(url: URL, loader: AsyncImageService, phaseHandler: @escaping (Phase) -> Content) {
+    public init(url: URL, imageService: AsyncImageServiceProtocol = AsyncImageService.shared, phaseHandler: @escaping (Phase) -> Content) {
         self.url = url
-        self.loader = loader
+        self.imageService = imageService
         self.phaseHandler = phaseHandler
         
         super.init(frame: CGRect.zero)
-        AsyncImageService.addObserver(self, selector: #selector(handleNotification))
+        imageService.addDelegate(self)
         refresh()
     }
     
@@ -44,20 +43,8 @@ public class AsyncImageView<Content: UIView>: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Image Handling -
-    
-    ///
-    /// Handle notifications from **ImageLoader**.
-    ///
-    /// - parameter notification: A notification posted after an image completes loading.
-    ///
-    @objc private func handleNotification(_ notification: Notification) {
-        guard let info = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo, info.url == url else { return }
-        
-        switch info.result {
-        case .success(let image): phase = .success(image)
-        case .failure(let error): phase = .failure(error)
-        }
+    deinit {
+        imageService.removeDelegate(self)
     }
 }
 
@@ -70,7 +57,7 @@ extension AsyncImageView {
     ///
     public func load() {
         phase = .empty
-        loader.load(url)
+        imageService.load(url)
     }
 }
 
@@ -88,5 +75,18 @@ extension AsyncImageView {
         addSubview(phaseView)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[phaseView]|", metrics: nil, views: ["phaseView": phaseView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[phaseView]|", metrics: nil, views: ["phaseView": phaseView]))
+    }
+}
+
+// MARK: - Image Handling -
+
+extension AsyncImageView: AsyncImageServiceDelegate {
+    
+    public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
+        guard response.url == url else { return }
+        switch response.result {
+        case .success(let image): phase = .success(image)
+        case .failure(let error): phase = .failure(error)
+        }
     }
 }

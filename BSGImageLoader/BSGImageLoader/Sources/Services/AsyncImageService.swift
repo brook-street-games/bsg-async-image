@@ -16,16 +16,8 @@ public final class AsyncImageService: AsyncImageServiceProtocol {
     // MARK: - Constants -
     
 	public struct Constants {
-		/// The name of the notification posted when an image is loaded.
-		public static let notificationName = "bsg.image"
-		/// The notification parameter containing a **NotificationInfo** object.
-		public static let notificationInfoParameter = "info"
-		/// The cache directory when **cacheType** is set to disk.
+		/// The directory used when caching to disk.
 		public static let diskCacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("bsg/images")
-	}
-	
-	public enum Error: Swift.Error {
-		case imageLoadFailed
 	}
     
     // MARK: - Properties -
@@ -41,7 +33,13 @@ public final class AsyncImageService: AsyncImageServiceProtocol {
     private var activeRequests = Set<URL>()
 	/// Contains all images cached in memory.
 	private var memoryCache = NSCache<NSString, UIImage>()
+    /// Objects to alert when loading is complete.
+    private var delegates = MulticastDelegate<AsyncImageServiceDelegate>()
 	
+    // MARK: - Shared -
+    
+    public static var shared = AsyncImageService(cacheType: .disk)
+    
 	// MARK: - Initializers -
 	
 	public init(cacheType: CacheType) {
@@ -55,14 +53,13 @@ public final class AsyncImageService: AsyncImageServiceProtocol {
 extension AsyncImageService {
 	
     ///
-    /// Load an image. If *cacheType* is set to a value other than none and the image has been previously loaded, it will be taken from cache. When an image is loaded **imageLoaderNotification** will be posted containing a **NotificationInfo** which can be used to obtain the loaded image.
-    ///
+    /// Load an image. If *cacheType* is set to a value other than none and the image has been previously loaded, it will be taken from cache. Alerts all delegates when complete.
     ///  - parameter url: The source URL of the image.
     ///
 	public func load(_ url: URL) {
 		
         if let image = loadFromCache(url) {
-			postNotification(info: NotificationInfo(url: url, result: .success(image)))
+            alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
 			return
 		}
 		
@@ -71,22 +68,20 @@ extension AsyncImageService {
 		}
 		
 		let dataTask = self.session.dataTask(with: url) { data, response, error in
-			
 			DispatchQueue.main.async {
-				
 				self.activeRequests.remove(url)
 				
 				guard error == nil, let data = data, let image = UIImage(data: data) else {
-					self.postNotification(info: NotificationInfo(url: url, result: .failure(Error.imageLoadFailed)))
+                    self.alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.loadFailed)))
 					return
 				}
 				
 				self.saveToCache(image, url: url)
-				self.postNotification(info: NotificationInfo(url: url, result: .success(image)))
+                self.alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
 			}
 		}
 				
-		self.activeRequests.insert(url)
+		activeRequests.insert(url)
 		dataTask.resume()
     }
 }
@@ -117,7 +112,6 @@ extension AsyncImageService {
 	
 	///
 	/// Save an image to cache.
-	///
 	/// - parameter image: An image.
 	/// - parameter url: The source URL of the image.
 	///
@@ -137,7 +131,6 @@ extension AsyncImageService {
 	
 	///
 	/// Load an image from cache.
-	///
 	/// - parameter url: The source URL of the image.
 	/// - returns: A cached image.
 	///
@@ -155,12 +148,11 @@ extension AsyncImageService {
 	}
 	
 	///
-	/// Clear all cache, ignoring the current value of **cacheType**.
+	/// Clear all caches.
 	///
 	public func clearCache() {
-		
 		memoryCache.removeAllObjects()
-		
+        
 		if let contents = try? fileManager.contentsOfDirectory(at: Constants.diskCacheDirectory, includingPropertiesForKeys: nil) {
 			for file in contents {
 				try? fileManager.removeItem(at: file)
@@ -175,7 +167,6 @@ extension AsyncImageService {
 	
 	///
 	/// Remove forward slashes from URL to create a disk-friendly file name.
-	///
 	/// - parameter url: A source URL.
 	/// - returns: A file name.
 	///
@@ -184,32 +175,33 @@ extension AsyncImageService {
 	}
 }
 
-// MARK: - Notification -
+// MARK: - Delegates -
 
 extension AsyncImageService {
-	
-    public struct NotificationInfo {
-        public var url: URL
-        public var result: Result<UIImage, Error>
+    
+    ///
+    /// Add a delegate to receive images.
+    /// - parameter delegate: The object that will be added.
+    ///
+    public func addDelegate(_ delegate: AsyncImageServiceDelegate) {
+        delegates.add(delegate)
     }
     
-	///
-	/// Add an observer to *all* instances of **ImageLoader**.
-	/// - warning: Calling this method more than once will result in duplicate notifications.
-	///
-	/// - parameter observer: The observing object.
-	/// - parameter selector: The method that will be called to handle notifications.
-	///
-	public static func addObserver(_ observer: Any, selector: Selector) {
-		NotificationCenter.default.addObserver(observer, selector: selector, name: Notification.Name(rawValue: Constants.notificationName), object: nil)
-	}
-	
     ///
-    /// Post a notification to alert observers that an image load has completed.
+    /// Remove a delegate that will no longer receive images.
+    /// - parameter delegate: The object that will be removed.
     ///
-    /// - parameter info: The notification info to pass.
+    public func removeDelegate(_ delegate: AsyncImageServiceDelegate) {
+        delegates.remove(delegate)
+    }
+    
     ///
-	private func postNotification(info: NotificationInfo) {
-		NotificationCenter.default.post(name: Notification.Name(Constants.notificationName), object: nil, userInfo: [Constants.notificationInfoParameter: info])
+    /// Alert all delegates of a response.
+    /// - parameter response: A response containing a loaded image.
+    ///
+    private func alertDelegates(response: AsyncImageResponse) {
+        delegates.invoke { delegate in
+            delegate.asyncImageService(self, didReceiveResponse: response)
+        }
     }
 }

@@ -7,6 +7,11 @@
 
 import Foundation
 
+///
+/// A set of rules for asynchronous image loading.
+///
 public protocol AsyncImageServiceProtocol {
     func load(_ url: URL)
+    func addDelegate(_ delegate: AsyncImageServiceDelegate)
+    func removeDelegate(_ delegate: AsyncImageServiceDelegate)
 }

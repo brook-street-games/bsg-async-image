@@ -81,7 +81,7 @@ final class SampleCell: UICollectionViewCell {
 extension SampleCell {
     
     private func createImageView() -> AsyncImageView<UIView> {
-        return AsyncImageView(url: image.url, loader: imageLoader) { phase in
+        return AsyncImageView(url: image.url, imageService: imageLoader) { phase in
             switch phase {
             case .empty:
                 let activityIndicator = UIActivityIndicatorView(style: .medium)

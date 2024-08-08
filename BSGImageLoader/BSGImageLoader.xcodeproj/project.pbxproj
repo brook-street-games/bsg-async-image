@@ -15,6 +15,10 @@
 		4ADA2C3C2C6516B800DBB78C /* ImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1A2C65150300DBB78C /* ImageLoaderTests.swift */; };
 		4ADA2C3D2C6516B800DBB78C /* ImageLoaderViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1B2C65150300DBB78C /* ImageLoaderViewTests.swift */; };
 		4ADA2C3F2C65207C00DBB78C /* AsyncImageServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */; };
+		4ADA2C412C652BCE00DBB78C /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */; };
+		4ADA2C432C652BEF00DBB78C /* AsyncImageServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */; };
+		4ADA2C452C65430000DBB78C /* AsyncImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */; };
+		4ADA2C472C6545C700DBB78C /* AsyncImageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */; };
 		7A7F09C026D1C919006206A3 /* BSGImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +43,10 @@
 		4ADA2C1B2C65150300DBB78C /* ImageLoaderViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLoaderViewTests.swift; sourceTree = "<group>"; };
 		4ADA2C1C2C65150300DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceProtocol.swift; sourceTree = "<group>"; };
+		4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
+		4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceDelegate.swift; sourceTree = "<group>"; };
+		4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageResponse.swift; sourceTree = "<group>"; };
+		4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageError.swift; sourceTree = "<group>"; };
 		7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSGImageLoader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7F09BB26D1C919006206A3 /* BSGImageLoaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSGImageLoaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -66,6 +74,9 @@
 			isa = PBXGroup;
 			children = (
 				4ADA2C072C6514FC00DBB78C /* Constants.swift */,
+				4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */,
+				4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */,
+				4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -75,6 +86,7 @@
 			children = (
 				4ADA2C092C6514FC00DBB78C /* AsyncImageService.swift */,
 				4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */,
+				4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -286,10 +298,14 @@
 			files = (
 				4ADA2C152C6514FC00DBB78C /* AsyncImageService.swift in Sources */,
 				4ADA2C172C6514FC00DBB78C /* AsyncImageViewModel.swift in Sources */,
+				4ADA2C412C652BCE00DBB78C /* MulticastDelegate.swift in Sources */,
+				4ADA2C472C6545C700DBB78C /* AsyncImageError.swift in Sources */,
 				4ADA2C3F2C65207C00DBB78C /* AsyncImageServiceProtocol.swift in Sources */,
 				4ADA2C162C6514FC00DBB78C /* AsyncImage.swift in Sources */,
 				4ADA2C182C6514FC00DBB78C /* AsyncImageView.swift in Sources */,
 				4ADA2C142C6514FC00DBB78C /* Constants.swift in Sources */,
+				4ADA2C432C652BEF00DBB78C /* AsyncImageServiceDelegate.swift in Sources */,
+				4ADA2C452C65430000DBB78C /* AsyncImageResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

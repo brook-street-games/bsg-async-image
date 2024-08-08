@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+///
+/// A view used to load and cache asynchronous images in SwiftUI.
+///
 public struct AsyncImage<Content: View>: View {
     
     // MARK: - Properties -
@@ -16,7 +19,7 @@ public struct AsyncImage<Content: View>: View {
     
     // MARK: - Initializers -
     
-    public init(url: URL, imageService: AsyncImageServiceProtocol, @ViewBuilder phaseHandler: @escaping (AsyncImageViewModel.Phase) -> Content) {
+    public init(url: URL, imageService: AsyncImageServiceProtocol = AsyncImageService.shared, @ViewBuilder phaseHandler: @escaping (AsyncImageViewModel.Phase) -> Content) {
         self.viewModel = AsyncImageViewModel(url: url, imageService: imageService)
         self.phaseHandler = phaseHandler
     }
@@ -27,7 +30,7 @@ public struct AsyncImage<Content: View>: View {
         Group {
             phaseHandler(viewModel.phase)
         }
-        .onAppear(perform: viewModel.imageAppeared)
+        .onAppear(perform: viewModel.viewAppeared)
     }
 }
 

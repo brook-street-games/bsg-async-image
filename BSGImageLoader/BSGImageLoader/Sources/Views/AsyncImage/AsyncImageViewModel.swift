@@ -28,7 +28,7 @@ public class AsyncImageViewModel: ObservableObject {
     public init(url: URL, imageService: AsyncImageServiceProtocol) {
         self.url = url
         self.imageService = imageService
-        AsyncImageService.addObserver(self, selector: #selector(handleImage))
+        imageService.addDelegate(self)
     }
 }
 
@@ -36,20 +36,18 @@ public class AsyncImageViewModel: ObservableObject {
 
 extension AsyncImageViewModel {
     
-    func imageAppeared() {
+    func viewAppeared() {
         imageService.load(url)
     }
 }
 
 // MARK: - Image Handling -
 
-extension AsyncImageViewModel {
- 
-    @objc private func handleImage(_ notification: Notification) {
-        guard let info = notification.userInfo?[AsyncImageService.Constants.notificationInfoParameter] as? AsyncImageService.NotificationInfo else { return }
-        guard info.url == url else { return }
-
-        switch info.result {
+extension AsyncImageViewModel: AsyncImageServiceDelegate {
+    
+    public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
+        guard response.url == url else { return }
+        switch response.result {
         case .success(let image): phase = .success(Image(uiImage: image))
         case .failure(let error): phase = .failure(error)
         }

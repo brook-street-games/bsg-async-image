@@ -3,25 +3,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "BSGImageLoader",
+    name: "BSGAsyncImage",
     platforms: [ .iOS(.v15) ],
     products: [
         .library(
-            name: "BSGImageLoader",
-            targets: ["BSGImageLoader"]
+            name: "BSGAsyncImage",
+            targets: ["BSGAsyncImage"]
         )
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "BSGImageLoader",
+            name: "BSGAsyncImage",
             dependencies: [],
-            path: "BSGImageLoader/BSGImageLoader/Sources"
+            path: "BSGAsyncImage/BSGAsyncImage/Sources"
         ),
         .testTarget(
-            name: "BSGImageLoaderTests",
-            dependencies: ["BSGImageLoader"],
-            path: "BSGImageLoader/BSGImageLoaderTests/Sources"
+            name: "BSGAsyncImageTests",
+            dependencies: ["BSGAsyncImage"],
+            path: "BSGAsyncImage/BSGAsyncImageTests/Sources"
         )
     ]
 )

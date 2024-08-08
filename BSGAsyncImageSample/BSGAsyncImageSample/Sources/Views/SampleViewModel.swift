@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import BSGImageLoader
+import BSGAsyncImage
 
 ///
 /// Data and functionality for the sample application.

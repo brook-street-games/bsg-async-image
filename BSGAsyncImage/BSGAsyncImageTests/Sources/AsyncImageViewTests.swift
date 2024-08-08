@@ -1,14 +1,14 @@
 //
-//  ImageLoaderViewTests.swift
+//  AsyncImageViewTests.swift
 //
 //  Created by JechtSh0t on 5/22/23.
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import XCTest
-@testable import BSGImageLoader
+@testable import BSGAsyncImage
 
-final class ImageLoaderViewTests: XCTestCase {
+final class AsyncImageViewTests: XCTestCase {
 	
     private let waitTime: TimeInterval = 3.0
 	private var testLoadSuccessExpectation: XCTestExpectation?
@@ -19,13 +19,13 @@ final class ImageLoaderViewTests: XCTestCase {
 	}
 }
 
-extension ImageLoaderViewTests {
+extension AsyncImageViewTests {
 	
 	func testLoadSuccess() {
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
         let successImageView = UIImageView(image: UIImage(systemName: "checkmark"))
-        let imageView = AsyncImageView(url: Constants.successImageURL1, loader: AsyncImageService(cacheType: .none), phaseHandler: { phase in
+        let imageView = AsyncImageView(url: Constants.successImageURL1, imageService: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
             case .success: return successImageView
             default: return UIView()
@@ -43,7 +43,7 @@ extension ImageLoaderViewTests {
         testLoadFailureExpectation = expectation(description: "Test load failure")
         
         let failureImageView = UIImageView(image: UIImage(systemName: "xmark"))
-        let imageView = AsyncImageView(url: Constants.failureImageURL, loader: AsyncImageService(cacheType: .none), phaseHandler: { phase in
+        let imageView = AsyncImageView(url: Constants.failureImageURL, imageService: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
             case .failure: return failureImageView
             default: return UIView()

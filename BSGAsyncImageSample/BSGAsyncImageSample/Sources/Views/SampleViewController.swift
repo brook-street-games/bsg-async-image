@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import BSGImageLoader
 
 ///
 /// UI for the sample application.

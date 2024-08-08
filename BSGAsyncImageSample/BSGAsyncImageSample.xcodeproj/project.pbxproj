@@ -15,8 +15,6 @@
 		4ADA2C362C65152B00DBB78C /* SampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C2A2C65152B00DBB78C /* SampleViewController.swift */; };
 		4ADA2C372C65152B00DBB78C /* SampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C2B2C65152B00DBB78C /* SampleViewModel.swift */; };
 		4ADA2C382C65152B00DBB78C /* SampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C2D2C65152B00DBB78C /* SampleApp.swift */; };
-		4AE916C22A1ACD0F00BDEF06 /* BSGImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AE916C12A1ACD0F00BDEF06 /* BSGImageLoader.framework */; };
-		4AE916C32A1ACD1400BDEF06 /* BSGImageLoader.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4AE916C12A1ACD0F00BDEF06 /* BSGImageLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,14 +24,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4AE916C32A1ACD1400BDEF06 /* BSGImageLoader.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4A50FDC02A1986AA00092A90 /* BSGImageLoaderSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSGImageLoaderSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A50FDC02A1986AA00092A90 /* BSGAsyncImageSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSGAsyncImageSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ADA2C212C65152B00DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4ADA2C222C65152B00DBB78C /* Lexend.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lexend.ttf; sourceTree = "<group>"; };
 		4ADA2C242C65152B00DBB78C /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
@@ -43,7 +40,6 @@
 		4ADA2C2A2C65152B00DBB78C /* SampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleViewController.swift; sourceTree = "<group>"; };
 		4ADA2C2B2C65152B00DBB78C /* SampleViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleViewModel.swift; sourceTree = "<group>"; };
 		4ADA2C2D2C65152B00DBB78C /* SampleApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleApp.swift; sourceTree = "<group>"; };
-		4AE916C12A1ACD0F00BDEF06 /* BSGImageLoader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BSGImageLoader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AE916C22A1ACD0F00BDEF06 /* BSGImageLoader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +56,6 @@
 		4A4F799A2A198E09003FFB77 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4AE916C12A1ACD0F00BDEF06 /* BSGImageLoader.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -69,7 +63,7 @@
 		4A50FDB72A1986AA00092A90 = {
 			isa = PBXGroup;
 			children = (
-				4ADA2C2F2C65152B00DBB78C /* BSGImageLoaderSample */,
+				4ADA2C2F2C65152B00DBB78C /* BSGAsyncImageSample */,
 				4A50FDC12A1986AA00092A90 /* Products */,
 				4A4F799A2A198E09003FFB77 /* Frameworks */,
 			);
@@ -78,7 +72,7 @@
 		4A50FDC12A1986AA00092A90 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4A50FDC02A1986AA00092A90 /* BSGImageLoaderSample.app */,
+				4A50FDC02A1986AA00092A90 /* BSGAsyncImageSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,21 +124,21 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		4ADA2C2F2C65152B00DBB78C /* BSGImageLoaderSample */ = {
+		4ADA2C2F2C65152B00DBB78C /* BSGAsyncImageSample */ = {
 			isa = PBXGroup;
 			children = (
 				4ADA2C232C65152B00DBB78C /* Assets */,
 				4ADA2C2E2C65152B00DBB78C /* Sources */,
 			);
-			path = BSGImageLoaderSample;
+			path = BSGAsyncImageSample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4A50FDBF2A1986AA00092A90 /* BSGImageLoaderSample */ = {
+		4A50FDBF2A1986AA00092A90 /* BSGAsyncImageSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4A50FDCE2A1986AB00092A90 /* Build configuration list for PBXNativeTarget "BSGImageLoaderSample" */;
+			buildConfigurationList = 4A50FDCE2A1986AB00092A90 /* Build configuration list for PBXNativeTarget "BSGAsyncImageSample" */;
 			buildPhases = (
 				4A50FDBC2A1986AA00092A90 /* Sources */,
 				4A50FDBD2A1986AA00092A90 /* Frameworks */,
@@ -155,9 +149,9 @@
 			);
 			dependencies = (
 			);
-			name = BSGImageLoaderSample;
+			name = BSGAsyncImageSample;
 			productName = SwiftyApp;
-			productReference = 4A50FDC02A1986AA00092A90 /* BSGImageLoaderSample.app */;
+			productReference = 4A50FDC02A1986AA00092A90 /* BSGAsyncImageSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -168,14 +162,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					4A50FDBF2A1986AA00092A90 = {
 						CreatedOnToolsVersion = 14.3;
 					};
 				};
 			};
-			buildConfigurationList = 4A50FDBB2A1986AA00092A90 /* Build configuration list for PBXProject "BSGImageLoaderSample" */;
+			buildConfigurationList = 4A50FDBB2A1986AA00092A90 /* Build configuration list for PBXProject "BSGAsyncImageSample" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -188,7 +182,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4A50FDBF2A1986AA00092A90 /* BSGImageLoaderSample */,
+				4A50FDBF2A1986AA00092A90 /* BSGAsyncImageSample */,
 			);
 		};
 /* End PBXProject section */
@@ -258,6 +252,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -318,6 +313,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -347,7 +343,7 @@
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BSGImageLoaderSample/Assets/Info.plist;
+				INFOPLIST_FILE = BSGAsyncImageSample/Assets/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -359,7 +355,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.brookstreetgames.BSGImageLoaderSample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brookstreetgames.BSGAsyncImageSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -378,7 +374,7 @@
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BSGImageLoaderSample/Assets/Info.plist;
+				INFOPLIST_FILE = BSGAsyncImageSample/Assets/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -390,7 +386,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.brookstreetgames.BSGImageLoaderSample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brookstreetgames.BSGAsyncImageSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -401,7 +397,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4A50FDBB2A1986AA00092A90 /* Build configuration list for PBXProject "BSGImageLoaderSample" */ = {
+		4A50FDBB2A1986AA00092A90 /* Build configuration list for PBXProject "BSGAsyncImageSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4A50FDCC2A1986AB00092A90 /* Debug */,
@@ -410,7 +406,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4A50FDCE2A1986AB00092A90 /* Build configuration list for PBXNativeTarget "BSGImageLoaderSample" */ = {
+		4A50FDCE2A1986AB00092A90 /* Build configuration list for PBXNativeTarget "BSGAsyncImageSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4A50FDCF2A1986AB00092A90 /* Debug */,

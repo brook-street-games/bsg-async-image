@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import BSGImageLoader
+import BSGAsyncImage
 
 ///
 /// A cell displaying a sample image.

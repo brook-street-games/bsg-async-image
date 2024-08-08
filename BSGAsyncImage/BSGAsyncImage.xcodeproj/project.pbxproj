@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,14 +12,14 @@
 		4ADA2C162C6514FC00DBB78C /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0B2C6514FC00DBB78C /* AsyncImage.swift */; };
 		4ADA2C172C6514FC00DBB78C /* AsyncImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0C2C6514FC00DBB78C /* AsyncImageViewModel.swift */; };
 		4ADA2C182C6514FC00DBB78C /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0E2C6514FC00DBB78C /* AsyncImageView.swift */; };
-		4ADA2C3C2C6516B800DBB78C /* ImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1A2C65150300DBB78C /* ImageLoaderTests.swift */; };
-		4ADA2C3D2C6516B800DBB78C /* ImageLoaderViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1B2C65150300DBB78C /* ImageLoaderViewTests.swift */; };
+		4ADA2C3C2C6516B800DBB78C /* AsyncImageServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1A2C65150300DBB78C /* AsyncImageServiceTests.swift */; };
+		4ADA2C3D2C6516B800DBB78C /* AsyncImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1B2C65150300DBB78C /* AsyncImageViewTests.swift */; };
 		4ADA2C3F2C65207C00DBB78C /* AsyncImageServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */; };
 		4ADA2C412C652BCE00DBB78C /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */; };
 		4ADA2C432C652BEF00DBB78C /* AsyncImageServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */; };
 		4ADA2C452C65430000DBB78C /* AsyncImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */; };
 		4ADA2C472C6545C700DBB78C /* AsyncImageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */; };
-		7A7F09C026D1C919006206A3 /* BSGImageLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */; };
+		7A7F09C026D1C919006206A3 /* BSGAsyncImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5459C926D1C0F4009578CC /* BSGAsyncImage.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,16 +39,16 @@
 		4ADA2C0C2C6514FC00DBB78C /* AsyncImageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageViewModel.swift; sourceTree = "<group>"; };
 		4ADA2C0E2C6514FC00DBB78C /* AsyncImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		4ADA2C112C6514FC00DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4ADA2C1A2C65150300DBB78C /* ImageLoaderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLoaderTests.swift; sourceTree = "<group>"; };
-		4ADA2C1B2C65150300DBB78C /* ImageLoaderViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLoaderViewTests.swift; sourceTree = "<group>"; };
+		4ADA2C1A2C65150300DBB78C /* AsyncImageServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceTests.swift; sourceTree = "<group>"; };
+		4ADA2C1B2C65150300DBB78C /* AsyncImageViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageViewTests.swift; sourceTree = "<group>"; };
 		4ADA2C1C2C65150300DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceProtocol.swift; sourceTree = "<group>"; };
 		4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceDelegate.swift; sourceTree = "<group>"; };
 		4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageResponse.swift; sourceTree = "<group>"; };
 		4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageError.swift; sourceTree = "<group>"; };
-		7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSGImageLoader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A7F09BB26D1C919006206A3 /* BSGImageLoaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSGImageLoaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A5459C926D1C0F4009578CC /* BSGAsyncImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSGAsyncImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A7F09BB26D1C919006206A3 /* BSGAsyncImageTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSGAsyncImageTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7F09C026D1C919006206A3 /* BSGImageLoader.framework in Frameworks */,
+				7A7F09C026D1C919006206A3 /* BSGAsyncImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,22 +127,22 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		4ADA2C132C6514FC00DBB78C /* BSGImageLoader */ = {
+		4ADA2C132C6514FC00DBB78C /* BSGAsyncImage */ = {
 			isa = PBXGroup;
 			children = (
 				4ADA2C392C65154600DBB78C /* Assets */,
 				4ADA2C122C6514FC00DBB78C /* Sources */,
 			);
-			path = BSGImageLoader;
+			path = BSGAsyncImage;
 			sourceTree = "<group>";
 		};
-		4ADA2C1D2C65150300DBB78C /* BSGImageLoaderTests */ = {
+		4ADA2C1D2C65150300DBB78C /* BSGAsyncImageTests */ = {
 			isa = PBXGroup;
 			children = (
 				4ADA2C3B2C65160200DBB78C /* Sources */,
 				4ADA2C3A2C6515FC00DBB78C /* Assets */,
 			);
-			path = BSGImageLoaderTests;
+			path = BSGAsyncImageTests;
 			sourceTree = "<group>";
 		};
 		4ADA2C392C65154600DBB78C /* Assets */ = {
@@ -164,8 +164,8 @@
 		4ADA2C3B2C65160200DBB78C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				4ADA2C1A2C65150300DBB78C /* ImageLoaderTests.swift */,
-				4ADA2C1B2C65150300DBB78C /* ImageLoaderViewTests.swift */,
+				4ADA2C1A2C65150300DBB78C /* AsyncImageServiceTests.swift */,
+				4ADA2C1B2C65150300DBB78C /* AsyncImageViewTests.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -173,8 +173,8 @@
 		7A5459BF26D1C0F4009578CC = {
 			isa = PBXGroup;
 			children = (
-				4ADA2C132C6514FC00DBB78C /* BSGImageLoader */,
-				4ADA2C1D2C65150300DBB78C /* BSGImageLoaderTests */,
+				4ADA2C132C6514FC00DBB78C /* BSGAsyncImage */,
+				4ADA2C1D2C65150300DBB78C /* BSGAsyncImageTests */,
 				7A5459CA26D1C0F4009578CC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -182,8 +182,8 @@
 		7A5459CA26D1C0F4009578CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */,
-				7A7F09BB26D1C919006206A3 /* BSGImageLoaderTests.xctest */,
+				7A5459C926D1C0F4009578CC /* BSGAsyncImage.framework */,
+				7A7F09BB26D1C919006206A3 /* BSGAsyncImageTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,9 +201,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7A5459C826D1C0F4009578CC /* BSGImageLoader */ = {
+		7A5459C826D1C0F4009578CC /* BSGAsyncImage */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7A5459DD26D1C0F5009578CC /* Build configuration list for PBXNativeTarget "BSGImageLoader" */;
+			buildConfigurationList = 7A5459DD26D1C0F5009578CC /* Build configuration list for PBXNativeTarget "BSGAsyncImage" */;
 			buildPhases = (
 				7A5459C426D1C0F4009578CC /* Headers */,
 				7A5459C526D1C0F4009578CC /* Sources */,
@@ -214,14 +214,14 @@
 			);
 			dependencies = (
 			);
-			name = BSGImageLoader;
+			name = BSGAsyncImage;
 			productName = BSGToolbarView;
-			productReference = 7A5459C926D1C0F4009578CC /* BSGImageLoader.framework */;
+			productReference = 7A5459C926D1C0F4009578CC /* BSGAsyncImage.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		7A7F09BA26D1C919006206A3 /* BSGImageLoaderTests */ = {
+		7A7F09BA26D1C919006206A3 /* BSGAsyncImageTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7A7F09C326D1C919006206A3 /* Build configuration list for PBXNativeTarget "BSGImageLoaderTests" */;
+			buildConfigurationList = 7A7F09C326D1C919006206A3 /* Build configuration list for PBXNativeTarget "BSGAsyncImageTests" */;
 			buildPhases = (
 				7A7F09B726D1C919006206A3 /* Sources */,
 				7A7F09B826D1C919006206A3 /* Frameworks */,
@@ -232,9 +232,9 @@
 			dependencies = (
 				7A7F09C226D1C919006206A3 /* PBXTargetDependency */,
 			);
-			name = BSGImageLoaderTests;
+			name = BSGAsyncImageTests;
 			productName = Tests;
-			productReference = 7A7F09BB26D1C919006206A3 /* BSGImageLoaderTests.xctest */;
+			productReference = 7A7F09BB26D1C919006206A3 /* BSGAsyncImageTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -243,8 +243,9 @@
 		7A5459C026D1C0F4009578CC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					7A5459C826D1C0F4009578CC = {
 						CreatedOnToolsVersion = 12.5;
@@ -255,7 +256,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7A5459C326D1C0F4009578CC /* Build configuration list for PBXProject "BSGImageLoader" */;
+			buildConfigurationList = 7A5459C326D1C0F4009578CC /* Build configuration list for PBXProject "BSGAsyncImage" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -268,8 +269,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7A5459C826D1C0F4009578CC /* BSGImageLoader */,
-				7A7F09BA26D1C919006206A3 /* BSGImageLoaderTests */,
+				7A5459C826D1C0F4009578CC /* BSGAsyncImage */,
+				7A7F09BA26D1C919006206A3 /* BSGAsyncImageTests */,
 			);
 		};
 /* End PBXProject section */
@@ -313,8 +314,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4ADA2C3C2C6516B800DBB78C /* ImageLoaderTests.swift in Sources */,
-				4ADA2C3D2C6516B800DBB78C /* ImageLoaderViewTests.swift in Sources */,
+				4ADA2C3C2C6516B800DBB78C /* AsyncImageServiceTests.swift in Sources */,
+				4ADA2C3D2C6516B800DBB78C /* AsyncImageViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +324,7 @@
 /* Begin PBXTargetDependency section */
 		7A7F09C226D1C919006206A3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 7A5459C826D1C0F4009578CC /* BSGImageLoader */;
+			target = 7A5459C826D1C0F4009578CC /* BSGAsyncImage */;
 			targetProxy = 7A7F09C126D1C919006206A3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -367,6 +368,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -381,7 +383,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -431,6 +433,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -439,7 +442,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -455,13 +458,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = BSGImageLoader/Assets/Info.plist;
+				ENABLE_MODULE_VERIFIER = YES;
+				INFOPLIST_FILE = BSGAsyncImage/Assets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -469,7 +474,8 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGImageLoader;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGAsyncImage;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -482,13 +488,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = BSGImageLoader/Assets/Info.plist;
+				ENABLE_MODULE_VERIFIER = YES;
+				INFOPLIST_FILE = BSGAsyncImage/Assets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -496,7 +504,8 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGImageLoader;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGAsyncImage;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -510,14 +519,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
-				INFOPLIST_FILE = BSGImageLoaderTests/Assets/Info.plist;
+				INFOPLIST_FILE = BSGAsyncImageTests/Assets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGImageLoaderTests;
+				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGAsyncImageTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -530,14 +539,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
-				INFOPLIST_FILE = BSGImageLoaderTests/Assets/Info.plist;
+				INFOPLIST_FILE = BSGAsyncImageTests/Assets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGImageLoaderTests;
+				PRODUCT_BUNDLE_IDENTIFIER = net.brookstreetgames.BSGAsyncImageTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -547,7 +556,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7A5459C326D1C0F4009578CC /* Build configuration list for PBXProject "BSGImageLoader" */ = {
+		7A5459C326D1C0F4009578CC /* Build configuration list for PBXProject "BSGAsyncImage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7A5459DB26D1C0F5009578CC /* Debug */,
@@ -556,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7A5459DD26D1C0F5009578CC /* Build configuration list for PBXNativeTarget "BSGImageLoader" */ = {
+		7A5459DD26D1C0F5009578CC /* Build configuration list for PBXNativeTarget "BSGAsyncImage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7A5459DE26D1C0F5009578CC /* Debug */,
@@ -565,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7A7F09C326D1C919006206A3 /* Build configuration list for PBXNativeTarget "BSGImageLoaderTests" */ = {
+		7A7F09C326D1C919006206A3 /* Build configuration list for PBXNativeTarget "BSGAsyncImageTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7A7F09C426D1C919006206A3 /* Debug */,

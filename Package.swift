@@ -1,18 +1,27 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.10
 
 import PackageDescription
 
 let package = Package(
-    name: "BSGImageLoader",
+    name: "BSGAsyncImage",
     platforms: [ .iOS(.v15) ],
     products: [
-        .library(name: "BSGImageLoader", targets: ["BSGImageLoader"])
+        .library(
+            name: "BSGAsyncImage",
+            targets: ["BSGAsyncImage"]
+        )
     ],
     dependencies: [],
     targets: [
-        .target(name: "BSGImageLoader", dependencies: [], path: "Sources", exclude: ["Info.plist"]
+        .target(
+            name: "BSGAsyncImage",
+            dependencies: [],
+            path: "BSGAsyncImage/BSGAsyncImage/Sources"
         ),
-        .testTarget(name: "BSGImageLoaderTests", dependencies: ["BSGImageLoader"], path: "Tests", exclude: ["Info.plist"]
+        .testTarget(
+            name: "BSGAsyncImageTests",
+            dependencies: ["BSGAsyncImage"],
+            path: "BSGAsyncImage/BSGAsyncImageTests/Sources"
         )
     ]
 )

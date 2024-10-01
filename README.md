@@ -4,7 +4,7 @@
 
 An iOS framework for asynchronous image loading, and caching.
 
-https://github.com/brook-street-games/bsg-image-loader/assets/72933425/39607948-6676-4f7b-a0de-897e40934baf
+https://github.com/user-attachments/assets/639b2a2a-33e7-4c0c-a49d-6a4fcd126bfe
 
 ## Installation
 

@@ -11,19 +11,12 @@ import XCTest
 final class AsyncImageViewTests: XCTestCase {
 	
     private let waitTime: TimeInterval = 3.0
-	private var testLoadSuccessExpectation: XCTestExpectation?
-	private var testLoadFailureExpectation: XCTestExpectation?
-	
-	override func setUp() {
-		NotificationCenter.default.removeObserver(self)
-	}
 }
 
 extension AsyncImageViewTests {
 	
-	func testLoadSuccess() {
-		testLoadSuccessExpectation = expectation(description: "Test load success")
-		
+    @MainActor
+	func testLoadSuccess() async throws {
         let successImageView = UIImageView(image: UIImage(systemName: "checkmark"))
         let imageView = AsyncImageView(url: Constants.successImageURL1, imageService: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
@@ -32,16 +25,12 @@ extension AsyncImageViewTests {
             }
         })
 		imageView.load()
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-            if imageView.subviews.contains(successImageView) { self.testLoadSuccessExpectation?.fulfill() }
-		}
-		waitForExpectations(timeout: waitTime)
+        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
+        XCTAssert(imageView.subviews.contains(successImageView))
 	}
 	
-	func testLoadFailure() {
-        testLoadFailureExpectation = expectation(description: "Test load failure")
-        
+    @MainActor
+	func testLoadFailure() async throws {
         let failureImageView = UIImageView(image: UIImage(systemName: "xmark"))
         let imageView = AsyncImageView(url: Constants.failureImageURL, imageService: AsyncImageService(cacheType: .none), phaseHandler: { phase in
             switch phase {
@@ -50,10 +39,7 @@ extension AsyncImageViewTests {
             }
         })
         imageView.load()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-            if imageView.subviews.contains(failureImageView) { self.testLoadFailureExpectation?.fulfill() }
-        }
-        waitForExpectations(timeout: waitTime)
+        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
+        XCTAssert(imageView.subviews.contains(failureImageView))
 	}
 }

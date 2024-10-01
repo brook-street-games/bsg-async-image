@@ -10,24 +10,61 @@ https://github.com/brook-street-games/bsg-image-loader/assets/72933425/39607948-
 
 #### Requirements
 
-+ iOS 13+
++ iOS 15+
 
 #### Swift Package Manager
 
-1. Navigate to ***File->Add Packages***.
-3. Enter Package URL: https://github.com/brook-street-games/bsg-image-loader.git
-3. Select a dependency rule. **Up to Next Major** is recommended.
+1. Navigate to ***File->Add Package Dependencies...***.
+3. Enter package URL: https://github.com/brook-street-games/bsg-async-image.git
+3. Select a dependency rule. **Up to Next Major Version** is recommended.
 4. Select a project.
 5. Select **Add Package**.
 
 ## Usage
 
-#### Use ImageLoaderView
-
 ```swift
 // Import the framework.
-import BSGImageLoader
+import BSGAsyncImage
+```
 
+#### SwiftUI
+
+```swift
+// Create a view similar to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
+AsyncImage(url: url) { phase in
+	switch phase {
+		case .empty: 
+		    // Configure a view for when the image is loading.
+		case .success(let image): 
+			// Configure a view for when the image loads.
+		case .failure(let error): 
+			// Configure a way for when the image fails to load.
+	}
+}
+```
+
+#### UIKit
+
+```swift
+let asyncImageView = AsyncImageView(url: url) { phase in
+	switch phase {
+	case .empty:
+	    // Configure a view for when the image is loading.
+		let activityIndicator = UIActivityIndicatorView(style: .medium)
+		activityIndicator.startAnimating()
+		return activityIndicator
+	case .success(let image):
+		// Configure a view for when the image loads.
+		let imageView = UIImageView(image: image)
+		imageView.contentMode = .scaleAspectFill
+		return imageView
+	case .failure:
+		// Configure a way for when the image fails to load.
+		let view = UIView()
+		view.backgroundColor = .red
+		return view
+	}
+}
 // Create an instance of ImageLoader.
 let imageLoader = ImageLoader(cache: .disk)
 

@@ -30,7 +30,8 @@ import BSGAsyncImage
 #### SwiftUI
 
 ```swift
-// Create a view similar to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
+// Create a view similar to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
+// By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 AsyncImage(url: url) { phase in
 	switch phase {
 		case .empty: 
@@ -46,11 +47,14 @@ AsyncImage(url: url) { phase in
 #### UIKit
 
 ```swift
+// Create a view. 
+// By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 let asyncImageView = AsyncImageView(url: url) { phase in
 	switch phase {
 	case .empty:
 	    // Configure a view for when the image is loading.
 		let activityIndicator = UIActivityIndicatorView(style: .medium)
+		activityIndicator.color = .black
 		activityIndicator.startAnimating()
 		return activityIndicator
 	case .success(let image):
@@ -61,48 +65,38 @@ let asyncImageView = AsyncImageView(url: url) { phase in
 	case .failure:
 		// Configure a way for when the image fails to load.
 		let view = UIView()
-		view.backgroundColor = .red
+		view.backgroundColor = .black
 		return view
 	}
 }
-// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cache: .disk)
+// Add the view to the hierarchy.
+view.addSubview(asyncImageView)
+// Load the image.
+asyncImageView.load()
 
-// Create an instance of ImageLoaderView.
-let imageLoaderView = ImageLoaderView()
-
-// Load an image.
-imageLoaderView.load(<URL>, imageLoader: imageLoader)
-```
-
-#### Use ImageLoader Directly
+#### Custom Implementation
 
 ```swift
-// Import the framework.
-import BSGImageLoader
+// Create an instance of *AsyncImageService*.
+let asyncImageService = AsyncImageService(cacheType: .disk)
 
-// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cache: .disk)
-
-// Add an observer.
-ImageLoader.addObserver(self, selector: #selector(handleNotification))
-
+// Add a delegate. A multicast delegate pattern is used, this can be called for each object that needs to handle images.
+await asyncImageService.addDelegate(self)
+}
 // Load an image.
-imageLoader.load(<URL>)
+await asyncImageLoader.load(url)
 
-// Handle notifications from ImageLoader. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
-@objc private func handleNotification(_ notification: Notification) {
-
-	guard let info = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
-	
-	// Check the URL.
-	guard info.url == <URL> else { return }
-
-	switch info.result {
-	case .success(let image): 
-		// Handle the image. 
-	case .failure(let error: 
-		// Handle the error.
+// Handle the result by conforming to *AsyncImageServiceDelegate*. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
+nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
+	Task { @MainActor in
+		// Check that the URL matches the one that was loaded.
+		guard response.url == self.url else { return }
+		switch response.result {
+		case .success(let image): 
+			// Handle the image. 
+		case .failure(let error): 
+			// Handle the error.
+		}
 	}
 }
 ```
@@ -112,22 +106,8 @@ imageLoader.load(<URL>)
 #### Cache Types
 
 * **None**. Images will not be cached.
-* **Memory**. Images will be cached to memory, using NSCache.
-* **Disk**. Images will be cached to disk in the ***documents/images*** directory.
-
-#### Activity Indicator
-
-```swift
-let activityIndicator = UIActivityIndicatorView(style: .medium)
-activityIndicator.color = .systemGreen
-imageLoaderView.load(<URL>, imageLoader: imageLoader, activityIndicator: activityIndicator)
-```
-
-#### Default Image
-
-```swift
-imageLoaderView.load(<URL>, imageLoader: imageLoader, defaultImage: UIImage())
-```
+* **Memory**. Images will be cached to memory using NSCache.
+* **Disk**. Images will be cached to disk in the ***documents/images*** directory, and to memory using NSCache.
 
 ## Author
 

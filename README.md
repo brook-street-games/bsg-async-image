@@ -30,7 +30,7 @@ import BSGAsyncImage
 ### SwiftUI
 
 **AsyncImage** conforms to **View** with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
-By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
+By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
 
 ```swift
 AsyncImage(url: url) { phase in
@@ -48,7 +48,7 @@ AsyncImage(url: url) { phase in
 ### UIKit
 
 **AsyncImageView** is a subclass of **UIImageView** built with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
-By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
+By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
 
 ```swift
 let asyncImageView = AsyncImageView(url: url) { phase in
@@ -77,7 +77,7 @@ view.addSubview(asyncImageView)
 asyncImageView.load()
 ```
 
-### Custom Implementation
+### Service
 
 **AsyncImageService** can be used directly to handle receiving images in cases where the views above are not sufficient.
 

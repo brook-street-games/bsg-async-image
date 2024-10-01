@@ -36,11 +36,17 @@ By default images will cache to disk. Optionally provide an **AsyncImageService*
 AsyncImage(url: url) { phase in
 	switch phase {
 	// Configure a view for when the image is loading.
-	case .empty: ProgressView()
+	case .empty: 
+		ProgressView()
+			.foregroundStyle(Color.black)
 	// Configure a view for when the image loads.
-	case .success(let image): image.resizable()
+	case .success(let image): 
+		image
+			.resizable()
 	// Configure a way for when the image fails to load.
-	case .failure(let error): Rectangle().foregroundStyle(Color.black)
+	case .failure(let error): 
+		Rectangle()
+			.foregroundStyle(Color.black)
 	}
 }
 ```

@@ -6,5 +6,6 @@
 //
 
 public enum AsyncImageError: Error {
-    case loadFailed
+    case invalidImageData
+    case requestFailed(Error)
 }

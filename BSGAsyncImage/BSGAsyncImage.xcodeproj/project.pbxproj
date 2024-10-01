@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A01850C2CAB84190045A733 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A01850B2CAB84190045A733 /* AsyncImageView.swift */; };
+		4A01850D2CAB84190045A733 /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A01850A2CAB84190045A733 /* AsyncImage.swift */; };
 		4ADA2C142C6514FC00DBB78C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C072C6514FC00DBB78C /* Constants.swift */; };
 		4ADA2C152C6514FC00DBB78C /* AsyncImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C092C6514FC00DBB78C /* AsyncImageService.swift */; };
-		4ADA2C162C6514FC00DBB78C /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0B2C6514FC00DBB78C /* AsyncImage.swift */; };
-		4ADA2C172C6514FC00DBB78C /* AsyncImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0C2C6514FC00DBB78C /* AsyncImageViewModel.swift */; };
-		4ADA2C182C6514FC00DBB78C /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C0E2C6514FC00DBB78C /* AsyncImageView.swift */; };
 		4ADA2C3C2C6516B800DBB78C /* AsyncImageServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1A2C65150300DBB78C /* AsyncImageServiceTests.swift */; };
 		4ADA2C3D2C6516B800DBB78C /* AsyncImageViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C1B2C65150300DBB78C /* AsyncImageViewTests.swift */; };
 		4ADA2C3F2C65207C00DBB78C /* AsyncImageServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */; };
@@ -33,11 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4A01850A2CAB84190045A733 /* AsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImage.swift; sourceTree = "<group>"; };
+		4A01850B2CAB84190045A733 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		4ADA2C072C6514FC00DBB78C /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4ADA2C092C6514FC00DBB78C /* AsyncImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageService.swift; sourceTree = "<group>"; };
-		4ADA2C0B2C6514FC00DBB78C /* AsyncImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImage.swift; sourceTree = "<group>"; };
-		4ADA2C0C2C6514FC00DBB78C /* AsyncImageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageViewModel.swift; sourceTree = "<group>"; };
-		4ADA2C0E2C6514FC00DBB78C /* AsyncImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		4ADA2C112C6514FC00DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4ADA2C1A2C65150300DBB78C /* AsyncImageServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageServiceTests.swift; sourceTree = "<group>"; };
 		4ADA2C1B2C65150300DBB78C /* AsyncImageViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageViewTests.swift; sourceTree = "<group>"; };
@@ -73,10 +71,10 @@
 		4ADA2C082C6514FC00DBB78C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */,
+				4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */,
 				4ADA2C072C6514FC00DBB78C /* Constants.swift */,
 				4ADA2C402C652BCE00DBB78C /* MulticastDelegate.swift */,
-				4ADA2C442C65430000DBB78C /* AsyncImageResponse.swift */,
-				4ADA2C462C6545C700DBB78C /* AsyncImageError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -85,34 +83,17 @@
 			isa = PBXGroup;
 			children = (
 				4ADA2C092C6514FC00DBB78C /* AsyncImageService.swift */,
-				4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */,
 				4ADA2C422C652BEF00DBB78C /* AsyncImageServiceDelegate.swift */,
+				4ADA2C3E2C65207C00DBB78C /* AsyncImageServiceProtocol.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		4ADA2C0D2C6514FC00DBB78C /* AsyncImage */ = {
-			isa = PBXGroup;
-			children = (
-				4ADA2C0B2C6514FC00DBB78C /* AsyncImage.swift */,
-				4ADA2C0C2C6514FC00DBB78C /* AsyncImageViewModel.swift */,
-			);
-			path = AsyncImage;
-			sourceTree = "<group>";
-		};
-		4ADA2C0F2C6514FC00DBB78C /* AsyncImageView */ = {
-			isa = PBXGroup;
-			children = (
-				4ADA2C0E2C6514FC00DBB78C /* AsyncImageView.swift */,
-			);
-			path = AsyncImageView;
 			sourceTree = "<group>";
 		};
 		4ADA2C102C6514FC00DBB78C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4ADA2C0D2C6514FC00DBB78C /* AsyncImage */,
-				4ADA2C0F2C6514FC00DBB78C /* AsyncImageView */,
+				4A01850A2CAB84190045A733 /* AsyncImage.swift */,
+				4A01850B2CAB84190045A733 /* AsyncImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -245,7 +226,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					7A5459C826D1C0F4009578CC = {
 						CreatedOnToolsVersion = 12.5;
@@ -298,15 +279,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ADA2C152C6514FC00DBB78C /* AsyncImageService.swift in Sources */,
-				4ADA2C172C6514FC00DBB78C /* AsyncImageViewModel.swift in Sources */,
 				4ADA2C412C652BCE00DBB78C /* MulticastDelegate.swift in Sources */,
 				4ADA2C472C6545C700DBB78C /* AsyncImageError.swift in Sources */,
 				4ADA2C3F2C65207C00DBB78C /* AsyncImageServiceProtocol.swift in Sources */,
-				4ADA2C162C6514FC00DBB78C /* AsyncImage.swift in Sources */,
-				4ADA2C182C6514FC00DBB78C /* AsyncImageView.swift in Sources */,
 				4ADA2C142C6514FC00DBB78C /* Constants.swift in Sources */,
 				4ADA2C432C652BEF00DBB78C /* AsyncImageServiceDelegate.swift in Sources */,
 				4ADA2C452C65430000DBB78C /* AsyncImageResponse.swift in Sources */,
+				4A01850C2CAB84190045A733 /* AsyncImageView.swift in Sources */,
+				4A01850D2CAB84190045A733 /* AsyncImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,7 +496,6 @@
 		7A7F09C426D1C919006206A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				INFOPLIST_FILE = BSGAsyncImageTests/Assets/Info.plist;
@@ -536,7 +515,6 @@
 		7A7F09C526D1C919006206A3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K9C8XCSNZZ;
 				INFOPLIST_FILE = BSGAsyncImageTests/Assets/Info.plist;

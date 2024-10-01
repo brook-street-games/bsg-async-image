@@ -2,95 +2,123 @@
 
 ## Overview
 
-An iOS framework for asynchronous image loading. Includes configurable caching behavior, and a custom image view.
+An iOS framework for asynchronous image loading, and caching.
 
-https://github.com/brook-street-games/bsg-image-loader/assets/72933425/39607948-6676-4f7b-a0de-897e40934baf
+https://github.com/user-attachments/assets/639b2a2a-33e7-4c0c-a49d-6a4fcd126bfe
 
 ## Installation
 
-#### Requirements
+### Requirements
 
-+ iOS 13+
++ iOS 15+
 
-#### Swift Package Manager
+### Swift Package Manager
 
-1. Navigate to ***File->Add Packages***.
-3. Enter Package URL: https://github.com/brook-street-games/bsg-image-loader.git
-3. Select a dependency rule. **Up to Next Major** is recommended.
+1. Navigate to ***File->Add Package Dependencies...***.
+3. Enter package URL: https://github.com/brook-street-games/bsg-async-image.git
+3. Select a dependency rule. **Up to Next Major Version** is recommended.
 4. Select a project.
 5. Select **Add Package**.
 
 ## Usage
 
-#### Use ImageLoaderView
-
 ```swift
 // Import the framework.
-import BSGImageLoader
-
-// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cache: .disk)
-
-// Create an instance of ImageLoaderView.
-let imageLoaderView = ImageLoaderView()
-
-// Load an image.
-imageLoaderView.load(<URL>, imageLoader: imageLoader)
+import BSGAsyncImage
 ```
 
-#### Use ImageLoader Directly
+### SwiftUI
+
+**AsyncImage** conforms to **View** with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
+By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
 
 ```swift
-// Import the framework.
-import BSGImageLoader
-
-// Create an instance of ImageLoader.
-let imageLoader = ImageLoader(cache: .disk)
-
-// Add an observer.
-ImageLoader.addObserver(self, selector: #selector(handleNotification))
-
-// Load an image.
-imageLoader.load(<URL>)
-
-// Handle notifications from ImageLoader. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
-@objc private func handleNotification(_ notification: Notification) {
-
-	guard let info = notification.userInfo?[ImageLoader.Constants.notificationInfoParameter] as? ImageLoader.NotificationInfo else { return }
-	
-	// Check the URL.
-	guard info.url == <URL> else { return }
-
-	switch info.result {
+AsyncImage(url: url) { phase in
+	switch phase {
+	// Configure a view for when the image is loading.
+	case .empty: 
+		ProgressView()
+			.foregroundStyle(Color.black)
+	// Configure a view for when the image loads.
 	case .success(let image): 
-		// Handle the image. 
-	case .failure(let error: 
-		// Handle the error.
+		image
+			.resizable()
+	// Configure a way for when the image fails to load.
+	case .failure(let error): 
+		Rectangle()
+			.foregroundStyle(Color.black)
+	}
+}
+```
+
+### UIKit
+
+**AsyncImageView** is a subclass of **UIImageView** built with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
+By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
+
+```swift
+let asyncImageView = AsyncImageView(url: url) { phase in
+	switch phase {
+	// Configure a view for when the image is loading.
+	case .empty:
+		let activityIndicator = UIActivityIndicatorView(style: .medium)
+		activityIndicator.color = .black
+		activityIndicator.startAnimating()
+		return activityIndicator
+	// Configure a view for when the image loads.
+	case .success(let image):
+		let imageView = UIImageView(image: image)
+		imageView.contentMode = .scaleAspectFill
+		return imageView
+	// Configure a way for when the image fails to load.
+	case .failure:
+		let view = UIView()
+		view.backgroundColor = .black
+		return view
+	}
+}
+// Add the view to the hierarchy.
+view.addSubview(asyncImageView)
+// Load the image.
+asyncImageView.load()
+```
+
+### Service
+
+**AsyncImageService** can be used directly to handle receiving images in cases where the views above are not sufficient.
+
+```swift
+// Create an instance of the service.
+let asyncImageService = AsyncImageService(cacheType: .disk)
+
+// Add a delegate. A multicast delegate pattern is used.
+await asyncImageService.addDelegate(self)
+}
+// Load an image.
+await asyncImageService.load(url)
+
+// Handle the result by conforming to *AsyncImageServiceDelegate*. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
+nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
+	Task { @MainActor in
+		// Check that the URLs match.
+		guard response.url == self.url else { return }
+		switch response.result {
+		case .success(let image): 
+			// Handle the image. 
+		case .failure(let error): 
+			// Handle the error.
+		}
 	}
 }
 ```
 
 ## Customization
 
-#### Cache Types
+### Cache Types
 
 * **None**. Images will not be cached.
-* **Memory**. Images will be cached to memory, using NSCache.
-* **Disk**. Images will be cached to disk in the ***documents/images*** directory.
-
-#### Activity Indicator
-
-```swift
-let activityIndicator = UIActivityIndicatorView(style: .medium)
-activityIndicator.color = .systemGreen
-imageLoaderView.load(<URL>, imageLoader: imageLoader, activityIndicator: activityIndicator)
-```
-
-#### Default Image
-
-```swift
-imageLoaderView.load(<URL>, imageLoader: imageLoader, defaultImage: UIImage())
-```
+* **Memory**. Images will be cached to memory using NSCache.
+* **Disk**. Images will be cached to disk in the ***documents/images*** directory, and to memory using NSCache.
 
 ## Author
 

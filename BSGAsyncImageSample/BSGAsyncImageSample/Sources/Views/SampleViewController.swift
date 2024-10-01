@@ -86,11 +86,10 @@ final class SampleViewController: UIViewController {
         activityIndictor.color = collectionView.systemBackgroundInverse
         collectionView.showActivityIndicator(activityIndictor)
         
-		viewModel.loadImages {
-            DispatchQueue.main.async {
-                self.refresh()
-            }
-		}
+        Task {
+            await viewModel.loadImages()
+            self.refresh()
+        }
     }
 	
 	private func setup() {

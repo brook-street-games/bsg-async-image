@@ -13,35 +13,30 @@ final class AsyncImageServiceTests: XCTestCase {
     private let waitTime: TimeInterval = 3.0
 	private var testLoadSuccessExpectation: XCTestExpectation?
 	private var testLoadFailureExpectation: XCTestExpectation?
-	private var testDiskCacheExpectation: XCTestExpectation?
-	
-	override func setUp() {
-		NotificationCenter.default.removeObserver(self)
-	}
 }
 
 // MARK: - Load -
 
 extension AsyncImageServiceTests {
 	
-	func testLoadSuccess() {
+	func testLoadSuccess() async {
 		testLoadSuccessExpectation = expectation(description: "Test load success")
 		
 		let imageService = AsyncImageService(cacheType: .none)
-        imageService.addDelegate(self)
-		imageService.load(Constants.successImageURL1)
+        await imageService.addDelegate(self)
+		await imageService.load(Constants.successImageURL1)
 		
-		waitForExpectations(timeout: waitTime)
+        await fulfillment(of: [testLoadSuccessExpectation!], timeout: waitTime)
 	}
 	
-	func testLoadFailure() {
+	func testLoadFailure() async {
 		testLoadFailureExpectation = expectation(description: "Test load failure")
 		
         let imageService = AsyncImageService(cacheType: .none)
-        imageService.addDelegate(self)
-		imageService.load(Constants.failureImageURL)
+        await imageService.addDelegate(self)
+        await imageService.load(Constants.failureImageURL)
 		
-		waitForExpectations(timeout: waitTime)
+        await fulfillment(of: [testLoadFailureExpectation!], timeout: waitTime)
 	}
 }
 
@@ -49,33 +44,27 @@ extension AsyncImageServiceTests {
 
 extension AsyncImageServiceTests {
 	
-	func testCreateDiskCacheDirectory() {
+	func testCreateDiskCacheDirectory() async throws {
 		try? FileManager.default.removeItem(atPath: AsyncImageService.Constants.diskCacheDirectory.path)
 		_ = AsyncImageService(cacheType: .disk)
+        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
 		XCTAssertTrue(FileManager.default.fileExists(atPath: AsyncImageService.Constants.diskCacheDirectory.path))
 	}
 	
-	func testDiskCache() {
-		testDiskCacheExpectation = expectation(description: "Test disk cache")
+	func testDiskCache() async throws {
+		let imageService = AsyncImageService(cacheType: .disk)
+        await imageService.clearCache()
+        await imageService.load(Constants.successImageURL1)
+        await imageService.load(Constants.successImageURL2)
+        await imageService.load(Constants.successImageURL3)
 		
-		let imageLoader = AsyncImageService(cacheType: .disk)
-		imageLoader.clearCache()
-		imageLoader.load(Constants.successImageURL1)
-		imageLoader.load(Constants.successImageURL2)
-		imageLoader.load(Constants.successImageURL3)
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-			guard let contents = try? FileManager.default.contentsOfDirectory(at: AsyncImageService.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
-			
-			guard contents.count == 3 else {
-				XCTAssertEqual(contents.count, 3)
-				return
-			}
-			
-			self.testDiskCacheExpectation?.fulfill()
-		}
-		
-		waitForExpectations(timeout: waitTime)
+        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
+        guard let contents = try? FileManager.default.contentsOfDirectory(at: AsyncImageService.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
+        
+        guard contents.count == 3 else {
+            XCTAssertEqual(contents.count, 3)
+            return
+        }
 	}
 }
 
@@ -86,10 +75,8 @@ extension AsyncImageServiceTests: AsyncImageServiceDelegate {
     func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
         if case .success = response.result, response.url == Constants.successImageURL1 {
             self.testLoadSuccessExpectation?.fulfill()
-            self.testLoadSuccessExpectation = nil
         } else if case .failure = response.result, response.url == Constants.failureImageURL {
             self.testLoadFailureExpectation?.fulfill()
-            self.testLoadFailureExpectation = nil
         }
     }
 }

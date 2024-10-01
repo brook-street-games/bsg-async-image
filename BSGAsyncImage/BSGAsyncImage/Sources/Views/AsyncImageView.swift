@@ -10,6 +10,7 @@ import UIKit
 ///
 /// A view used to load and cache asynchronous images in UIKit.
 ///
+@MainActor
 public class AsyncImageView<Content: UIView>: UIImageView {
     
     // MARK: - Phase -
@@ -25,7 +26,7 @@ public class AsyncImageView<Content: UIView>: UIImageView {
     private let url: URL
     private let imageService: AsyncImageServiceProtocol
     private let phaseHandler: (Phase) -> Content
-    private var phase: Phase = .empty { didSet { refresh() }}
+    private var phase: Phase = .empty
     
     // MARK: - Initializers -
     
@@ -35,16 +36,15 @@ public class AsyncImageView<Content: UIView>: UIImageView {
         self.phaseHandler = phaseHandler
         
         super.init(frame: CGRect.zero)
-        imageService.addDelegate(self)
-        refresh()
+        
+        Task {
+            await imageService.addDelegate(self)
+            await refresh()
+        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        imageService.removeDelegate(self)
     }
 }
 
@@ -57,7 +57,9 @@ extension AsyncImageView {
     ///
     public func load() {
         phase = .empty
-        imageService.load(url)
+        Task {
+            await imageService.load(url)
+        }
     }
 }
 
@@ -68,7 +70,7 @@ extension AsyncImageView {
     ///
     /// Refresh subviews when the phase changes.
     ///
-    private func refresh() {
+    private func refresh() async {
         for subview in subviews { subview.removeFromSuperview() }
         let phaseView = phaseHandler(phase)
         phaseView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,11 +84,14 @@ extension AsyncImageView {
 
 extension AsyncImageView: AsyncImageServiceDelegate {
     
-    public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
-        guard response.url == url else { return }
-        switch response.result {
-        case .success(let image): phase = .success(image)
-        case .failure(let error): phase = .failure(error)
+    nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
+        Task { @MainActor in
+            guard response.url == self.url else { return }
+            switch response.result {
+            case .success(let image): self.phase = .success(image)
+            case .failure(let error): self.phase = .failure(error)
+            }
+            await refresh()
         }
     }
 }

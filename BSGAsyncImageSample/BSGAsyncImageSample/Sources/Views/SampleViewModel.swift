@@ -45,20 +45,13 @@ final class SampleViewModel {
 
 extension SampleViewModel {
 	
-	func loadImages(completion: @escaping () -> Void) {
-		
+	func loadImages() async {
 		debugPrint("Disk cache directory: \(AsyncImageService.Constants.diskCacheDirectory)")
-		
-		let dataTask = URLSession(configuration: .ephemeral).dataTask(with: Constants.sampleImageURL) { data, response, error in
-			
-			guard let data = data, let images = try? JSONDecoder().decode(Array<SampleImage>.self, from: data) else { return }
-			
-			debugPrint("Loaded \(images.count) images from \(Constants.sampleImageURL)")
-			self.images = images
-			self.rollImages()
-			completion()
-		}
-		dataTask.resume()
+        guard let (data, _) = try? await URLSession(configuration: .ephemeral).data(from: Constants.sampleImageURL) else { return }
+        guard let images = try? JSONDecoder().decode(Array<SampleImage>.self, from: data) else { return }
+        debugPrint("Loaded \(images.count) images from \(Constants.sampleImageURL)")
+        self.images = images
+        self.rollImages()
 	}
 	
 	func rollImages() {
@@ -85,6 +78,8 @@ extension SampleViewModel {
 	}
 	
 	func clearCache() {
-		imageLoader.clearCache()
+        Task {
+            await imageLoader.clearCache()
+        }
 	}
 }

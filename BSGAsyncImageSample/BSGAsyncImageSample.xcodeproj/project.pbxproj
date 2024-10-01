@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A0185102CAB8A570045A733 /* BSGAsyncImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A01850E2CAB84D00045A733 /* BSGAsyncImage.framework */; };
+		4A0185112CAB8A570045A733 /* BSGAsyncImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4A01850E2CAB84D00045A733 /* BSGAsyncImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4ADA2C312C65152B00DBB78C /* Lexend.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4ADA2C222C65152B00DBB78C /* Lexend.ttf */; };
 		4ADA2C322C65152B00DBB78C /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C242C65152B00DBB78C /* UIView+Extensions.swift */; };
 		4ADA2C332C65152B00DBB78C /* SampleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA2C262C65152B00DBB78C /* SampleImage.swift */; };
@@ -24,12 +26,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4A0185112CAB8A570045A733 /* BSGAsyncImage.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4A01850E2CAB84D00045A733 /* BSGAsyncImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BSGAsyncImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A50FDC02A1986AA00092A90 /* BSGAsyncImageSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSGAsyncImageSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ADA2C212C65152B00DBB78C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4ADA2C222C65152B00DBB78C /* Lexend.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lexend.ttf; sourceTree = "<group>"; };
@@ -47,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A0185102CAB8A570045A733 /* BSGAsyncImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +61,7 @@
 		4A4F799A2A198E09003FFB77 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4A01850E2CAB84D00045A733 /* BSGAsyncImage.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -118,8 +124,8 @@
 			children = (
 				4ADA2C252C65152B00DBB78C /* Extensions */,
 				4ADA2C272C65152B00DBB78C /* Models */,
-				4ADA2C2C2C65152B00DBB78C /* Views */,
 				4ADA2C2D2C65152B00DBB78C /* SampleApp.swift */,
+				4ADA2C2C2C65152B00DBB78C /* Views */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -162,7 +168,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					4A50FDBF2A1986AA00092A90 = {
 						CreatedOnToolsVersion = 14.3;

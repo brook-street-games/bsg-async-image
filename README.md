@@ -35,12 +35,12 @@ By default images will cache to disk. Optionally provide an **AsyncImageService*
 ```swift
 AsyncImage(url: url) { phase in
 	switch phase {
-		case .empty: 
-		    // Configure a view for when the image is loading.
-		case .success(let image): 
-			// Configure a view for when the image loads.
-		case .failure(let error): 
-			// Configure a way for when the image fails to load.
+	// Configure a view for when the image is loading.
+	case .empty: ProgressView()
+	// Configure a view for when the image loads.
+	case .success(let image): image.resizable()
+	// Configure a way for when the image fails to load.
+	case .failure(let error): Rectangle().foregroundStyle(Color.black)
 	}
 }
 ```
@@ -53,19 +53,19 @@ By default images will cache to disk. Optionally provide an **AsyncImageService*
 ```swift
 let asyncImageView = AsyncImageView(url: url) { phase in
 	switch phase {
+	// Configure a view for when the image is loading.
 	case .empty:
-	    // Configure a view for when the image is loading.
 		let activityIndicator = UIActivityIndicatorView(style: .medium)
 		activityIndicator.color = .black
 		activityIndicator.startAnimating()
 		return activityIndicator
+	// Configure a view for when the image loads.
 	case .success(let image):
-		// Configure a view for when the image loads.
 		let imageView = UIImageView(image: image)
 		imageView.contentMode = .scaleAspectFill
 		return imageView
+	// Configure a way for when the image fails to load.
 	case .failure:
-		// Configure a way for when the image fails to load.
 		let view = UIView()
 		view.backgroundColor = .black
 		return view
@@ -89,7 +89,7 @@ let asyncImageService = AsyncImageService(cacheType: .disk)
 await asyncImageService.addDelegate(self)
 }
 // Load an image.
-await asyncImageLoader.load(url)
+await asyncImageService.load(url)
 
 // Handle the result by conforming to *AsyncImageServiceDelegate*. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
 nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {

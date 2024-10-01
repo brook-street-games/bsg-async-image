@@ -2,17 +2,17 @@
 
 ## Overview
 
-An iOS framework for asynchronous image loading. Includes configurable caching behavior, and a custom image view.
+An iOS framework for asynchronous image loading, and caching.
 
 https://github.com/brook-street-games/bsg-image-loader/assets/72933425/39607948-6676-4f7b-a0de-897e40934baf
 
 ## Installation
 
-#### Requirements
+### Requirements
 
 + iOS 15+
 
-#### Swift Package Manager
+### Swift Package Manager
 
 1. Navigate to ***File->Add Package Dependencies...***.
 3. Enter package URL: https://github.com/brook-street-games/bsg-async-image.git
@@ -27,11 +27,12 @@ https://github.com/brook-street-games/bsg-image-loader/assets/72933425/39607948-
 import BSGAsyncImage
 ```
 
-#### SwiftUI
+### SwiftUI
+
+**AsyncImage** conforms to **View** with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
+By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 
 ```swift
-// Create a view similar to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
-// By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 AsyncImage(url: url) { phase in
 	switch phase {
 		case .empty: 
@@ -44,11 +45,12 @@ AsyncImage(url: url) { phase in
 }
 ```
 
-#### UIKit
+### UIKit
+
+**AsyncImageView** is a subclass of **UIImageView** built with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
+By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 
 ```swift
-// Create a view. 
-// By default images will cache to disk. Optionally provide an *AsyncImageService* to customize this.
 let asyncImageView = AsyncImageView(url: url) { phase in
 	switch phase {
 	case .empty:
@@ -73,14 +75,17 @@ let asyncImageView = AsyncImageView(url: url) { phase in
 view.addSubview(asyncImageView)
 // Load the image.
 asyncImageView.load()
+```
 
-#### Custom Implementation
+### Custom Implementation
+
+**AsyncImageService** can be used directly to handle receiving images in cases where the views above are not sufficient.
 
 ```swift
-// Create an instance of *AsyncImageService*.
+// Create an instance of the service.
 let asyncImageService = AsyncImageService(cacheType: .disk)
 
-// Add a delegate. A multicast delegate pattern is used, this can be called for each object that needs to handle images.
+// Add a delegate. A multicast delegate pattern is used.
 await asyncImageService.addDelegate(self)
 }
 // Load an image.
@@ -89,7 +94,7 @@ await asyncImageLoader.load(url)
 // Handle the result by conforming to *AsyncImageServiceDelegate*. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
 nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
 	Task { @MainActor in
-		// Check that the URL matches the one that was loaded.
+		// Check that the URLs match.
 		guard response.url == self.url else { return }
 		switch response.result {
 		case .success(let image): 
@@ -103,7 +108,7 @@ nonisolated public func asyncImageService(_ service: AsyncImageService, didRecei
 
 ## Customization
 
-#### Cache Types
+### Cache Types
 
 * **None**. Images will not be cached.
 * **Memory**. Images will be cached to memory using NSCache.

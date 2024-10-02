@@ -1,4 +1,4 @@
-# BSGImageLoader
+# BSGAsyncImage
 
 ## Overview
 
@@ -117,8 +117,8 @@ nonisolated public func asyncImageService(_ service: AsyncImageService, didRecei
 ### Cache Types
 
 * **None**. Images will not be cached.
-* **Memory**. Images will be cached to memory using NSCache.
-* **Disk**. Images will be cached to disk in the ***documents/images*** directory, and to memory using NSCache.
+* **Memory**. Images will be cached to memory.
+* **Disk**. Images will be cached to disk in the caches directory under ***/bsg/images***, and to memory.
 
 ## Author
 

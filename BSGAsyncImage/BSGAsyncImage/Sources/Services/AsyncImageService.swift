@@ -5,6 +5,7 @@
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
+import CryptoKit
 import Foundation
 import UIKit
 
@@ -61,7 +62,6 @@ extension AsyncImageService {
     ///  - parameter url: The source URL of the image.
     ///
 	public func load(_ url: URL) async {
-		
         if let image = await loadFromCache(url) {
             await alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
 			return
@@ -119,9 +119,7 @@ extension AsyncImageService {
 	/// - parameter url: The source URL of the image.
 	///
 	private func saveToCache(_ image: UIImage, url: URL) async {
-		
-		guard let imageName = fileName(for: url) else { return }
-		
+        let imageName = cacheKey(for: url)
 		switch cacheType {
 		case .none: break
 		case .memory: memoryCache.setObject(image, forKey: imageName as NSString)
@@ -139,9 +137,7 @@ extension AsyncImageService {
 	/// - returns: A cached image.
 	///
 	private func loadFromCache(_ url: URL) async -> UIImage? {
-		
-		guard let imageName = fileName(for: url) else { return nil }
-		
+		let imageName = cacheKey(for: url)
 		switch cacheType {
 		case .none: return nil
 		case .memory: return memoryCache.object(forKey: imageName as NSString)
@@ -160,7 +156,6 @@ extension AsyncImageService {
 	///
 	public func clearCache() async {
 		memoryCache.removeAllObjects()
-        
 		if let contents = try? fileManager.contentsOfDirectory(at: Constants.diskCacheDirectory, includingPropertiesForKeys: nil) {
 			for file in contents {
 				try? fileManager.removeItem(at: file)
@@ -174,12 +169,14 @@ extension AsyncImageService {
 extension AsyncImageService {
 	
 	///
-	/// Remove forward slashes from URL to create a disk-friendly file name.
+	/// Create a disk-friendly file name.
 	/// - parameter url: A source URL.
 	/// - returns: A file name.
 	///
-	private func fileName(for url: URL) -> String? {
-		return url.path.replacingOccurrences(of: "/", with: "_")
+	private func cacheKey(for url: URL) -> String {
+        let data = Data(url.absoluteString.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.map { String(format: "%02x", $0) }.joined()
 	}
 }
 

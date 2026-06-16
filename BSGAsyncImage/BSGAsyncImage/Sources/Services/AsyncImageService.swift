@@ -9,8 +9,18 @@ import CryptoKit
 import Foundation
 import UIKit
 
+public protocol AsyncImageServiceProtocol: Sendable {
+    func load(_ url: URL) async
+    func addDelegate(_ delegate: AsyncImageServiceDelegate) async
+    func removeDelegate(_ delegate: AsyncImageServiceDelegate) async
+}
+
+public protocol AsyncImageServiceDelegate: AnyObject, Sendable {
+    @MainActor func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse)
+}
+
 ///
-/// A class used for asynchronous image loading.
+/// A service for asynchronous image loading.
 ///
 public final actor AsyncImageService: AsyncImageServiceProtocol {
 	
@@ -26,7 +36,7 @@ public final actor AsyncImageService: AsyncImageServiceProtocol {
 	/// The type of caching used for images.
 	public private(set) var cacheType: CacheType
 	
-	/// The session used to loading all images.
+	/// The session used to load images.
 	private lazy var session = URLSession(configuration: .ephemeral)
 	/// The file manager instance used for caching to disk.
 	private lazy var fileManager = FileManager.default
@@ -39,7 +49,7 @@ public final actor AsyncImageService: AsyncImageServiceProtocol {
 	
     // MARK: - Shared -
     
-    public static var shared = AsyncImageService(cacheType: .disk)
+    public static let shared = AsyncImageService(cacheType: .disk)
     
 	// MARK: - Initializers -
 	
@@ -62,7 +72,7 @@ extension AsyncImageService {
     ///  - parameter url: The source URL of the image.
     ///
 	public func load(_ url: URL) async {
-        if let image = await loadFromCache(url) {
+        if let image = loadFromCache(url) {
             await alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
 			return
 		}
@@ -77,14 +87,14 @@ extension AsyncImageService {
             activeRequests.remove(url)
             
             guard let image = UIImage(data: data) else {
-                await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.invalidImageData)))
+                await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.decodingFailed)))
                 return
             }
             
-            await saveToCache(image, url: url)
+            saveToCache(image, url: url)
             await alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
         } catch {
-            await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.requestFailed(error))))
+            await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.downloadFailed(error))))
         }
     }
 }
@@ -98,14 +108,14 @@ extension AsyncImageService {
         case none
         /// Images will be cached to memory.
         case memory
-        /// Images will be cached to disk under *documents/images*.
+        /// Images will be cached to both memory and disk.
         case disk
     }
     
 	///
 	/// Create a directory for disk cache.
 	///
-	private func createCacheDirectory() async {
+	private func createCacheDirectory() {
 		do {
 			try fileManager.createDirectory(at: Constants.diskCacheDirectory, withIntermediateDirectories: true, attributes: [:])
 		} catch {
@@ -116,9 +126,9 @@ extension AsyncImageService {
 	///
 	/// Save an image to cache.
 	/// - parameter image: An image.
-	/// - parameter url: The source URL of the image.
+	/// - parameter url: A source URL.
 	///
-	private func saveToCache(_ image: UIImage, url: URL) async {
+	private func saveToCache(_ image: UIImage, url: URL) {
         let imageName = cacheKey(for: url)
 		switch cacheType {
 		case .none: break
@@ -130,20 +140,31 @@ extension AsyncImageService {
             memoryCache.setObject(image, forKey: imageName as NSString)
 		}
 	}
+    
+    ///
+    /// Hash a URL to create a cache key.
+    /// - parameter url: A source URL.
+    /// - returns: A cache key.
+    ///
+    private func cacheKey(for url: URL) -> String {
+        let data = Data(url.absoluteString.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.map { String(format: "%02x", $0) }.joined()
+    }
 	
 	///
 	/// Load an image from cache.
-	/// - parameter url: The source URL of the image.
+	/// - parameter url: A source URL.
 	/// - returns: A cached image.
 	///
-	private func loadFromCache(_ url: URL) async -> UIImage? {
+	private func loadFromCache(_ url: URL) -> UIImage? {
 		let imageName = cacheKey(for: url)
 		switch cacheType {
 		case .none: return nil
 		case .memory: return memoryCache.object(forKey: imageName as NSString)
 		case .disk:
-            if let i = memoryCache.object(forKey: imageName as NSString) {
-                return i
+            if let image = memoryCache.object(forKey: imageName as NSString) {
+                return image
             } else {
                 guard let data = fileManager.contents(atPath: Constants.diskCacheDirectory.appendingPathComponent(imageName).path) else { return nil }
                 return UIImage(data: data)
@@ -152,7 +173,7 @@ extension AsyncImageService {
 	}
 	
 	///
-	/// Clear all caches.
+	/// Clear all cached images.
 	///
 	public func clearCache() async {
 		memoryCache.removeAllObjects()
@@ -164,37 +185,21 @@ extension AsyncImageService {
 	}
 }
 
-// MARK: - File Name -
-
-extension AsyncImageService {
-	
-	///
-	/// Create a disk-friendly file name.
-	/// - parameter url: A source URL.
-	/// - returns: A file name.
-	///
-	private func cacheKey(for url: URL) -> String {
-        let data = Data(url.absoluteString.utf8)
-        let hash = SHA256.hash(data: data)
-        return hash.map { String(format: "%02x", $0) }.joined()
-	}
-}
-
 // MARK: - Delegates -
 
 extension AsyncImageService {
     
     ///
     /// Add a delegate to receive images.
-    /// - parameter delegate: The object that will be added.
+    /// - parameter delegate: The delegate that will be added.
     ///
     public func addDelegate(_ delegate: AsyncImageServiceDelegate) async {
         await delegates.add(delegate)
     }
     
     ///
-    /// Remove a delegate that will no longer receive images.
-    /// - parameter delegate: The object that will be removed.
+    /// Stop a delegate from receiving images.
+    /// - parameter delegate: The delegate that will be removed.
     ///
     public func removeDelegate(_ delegate: AsyncImageServiceDelegate) async {
         await delegates.remove(delegate)
@@ -202,11 +207,11 @@ extension AsyncImageService {
     
     ///
     /// Alert all delegates of a response.
-    /// - parameter response: A response containing a loaded image.
+    /// - parameter response: A response containing an image.
     ///
     private func alertDelegates(response: AsyncImageResponse) async {
         await delegates.invoke { delegate in
-            delegate.asyncImageService(self, didReceiveResponse: response)
+            await delegate.asyncImageService(self, didReceiveResponse: response)
         }
     }
 }

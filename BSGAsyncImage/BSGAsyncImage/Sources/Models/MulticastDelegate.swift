@@ -8,10 +8,9 @@
 import Foundation
 
 ///
-/// Handles multiple delegates.
-/// Source: https://tolgatanerstories.medium.com/a-better-pattern-than-notification-center-in-swift-f88f3a27afe6#:~:text=Cons%20Of%20The%20Notification%20Center,the%20weak%20hash%20table%20implementation.
+/// A collection of weakly referenced delegates.
 ///
-actor MulticastDelegate<T> {
+actor MulticastDelegate<T: Sendable> {
     private let delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
 }
 
@@ -19,21 +18,17 @@ actor MulticastDelegate<T> {
 
 extension MulticastDelegate {
     
-    func add(_ delegate: T) async {
+    func add(_ delegate: T) {
         delegates.add(delegate as AnyObject)
     }
 
-    func remove(_ target: T) async {
-        for delegate in delegates.allObjects {
-            if delegate === target as AnyObject {
-                delegates.remove(delegate)
-            }
-        }
+    func remove(_ delegate: T) {
+        delegates.remove(delegate as AnyObject)
     }
 
-    func invoke(_ invocation: (T) -> Void) async {
-        for delegate in delegates.allObjects {
-            invocation(delegate as! T)
+    func invoke(_ invocation: @Sendable (T) async -> Void) async {
+        for case let delegate as T in delegates.allObjects {
+            await invocation(delegate)
         }
     }
 }

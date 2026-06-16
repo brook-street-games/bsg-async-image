@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct AsyncImageResponse {
+public struct AsyncImageResponse: Sendable {
     public var url: URL
     public var result: Result<UIImage, Error>
 }

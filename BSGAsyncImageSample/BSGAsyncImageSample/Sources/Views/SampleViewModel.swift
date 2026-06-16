@@ -11,6 +11,7 @@ import BSGAsyncImage
 ///
 /// Data and functionality for the sample application.
 ///
+@MainActor
 final class SampleViewModel {
 	
 	// MARK: - Constants -
@@ -46,7 +47,7 @@ final class SampleViewModel {
 extension SampleViewModel {
 	
 	func loadImages() async {
-		debugPrint("Disk cache directory: \(AsyncImageService.Constants.diskCacheDirectory)")
+		debugPrint("Disk cache directory: \(AsyncImageService.Constant.diskCacheDirectory)")
         guard let (data, _) = try? await URLSession(configuration: .ephemeral).data(from: Constants.sampleImageURL) else { return }
         guard let images = try? JSONDecoder().decode(Array<SampleImage>.self, from: data) else { return }
         debugPrint("Loaded \(images.count) images from \(Constants.sampleImageURL)")
@@ -68,7 +69,6 @@ extension SampleViewModel {
 	}
 	
 	private func cacheType(for index: Int) -> AsyncImageService.CacheType {
-		
 		switch index {
 		case 0: return .none
 		case 1: return .memory

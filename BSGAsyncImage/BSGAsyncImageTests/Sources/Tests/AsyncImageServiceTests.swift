@@ -1,82 +1,79 @@
 //
-//  AsyncImageServiceTests.swift
+//  AsyncImageServiceTests2.swift
 //
 //  Created by JechtSh0t on 5/20/23.
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import BSGAsyncImage
 
-final class AsyncImageServiceTests: XCTestCase {
-	
-    private let waitTime: TimeInterval = 3.0
-	private var testLoadSuccessExpectation: XCTestExpectation?
-	private var testLoadFailureExpectation: XCTestExpectation?
+@MainActor
+final class AsyncImageServiceTests {
+    private var delegateHandler: ((AsyncImageResponse) -> Void)?
 }
 
 // MARK: - Load -
 
 extension AsyncImageServiceTests {
-	
-	func testLoadSuccess() async {
-		testLoadSuccessExpectation = expectation(description: "Test load success")
-		
-		let imageService = AsyncImageService(cacheType: .none)
-        await imageService.addDelegate(self)
-		await imageService.load(Constants.successImageURL1)
-		
-        await fulfillment(of: [testLoadSuccessExpectation!], timeout: waitTime)
-	}
-	
-	func testLoadFailure() async {
-		testLoadFailureExpectation = expectation(description: "Test load failure")
-		
-        let imageService = AsyncImageService(cacheType: .none)
-        await imageService.addDelegate(self)
-        await imageService.load(Constants.failureImageURL)
-		
-        await fulfillment(of: [testLoadFailureExpectation!], timeout: waitTime)
-	}
+
+    @Test func testLoadSuccess() async {
+        await confirmation("Test load success") { confirmed in
+            delegateHandler  = { response in
+                if case .success = response.result, response.url == Constant.successImageURL1 {
+                    confirmed()
+                }
+            }
+
+            let imageService = AsyncImageService(cacheType: .none)
+            await imageService.addDelegate(self)
+            await imageService.load(Constant.successImageURL1)
+        }
+    }
+
+    @Test func testLoadFailure() async {
+        await confirmation("Test load failure") { confirmed in
+            delegateHandler = { response in
+                if case .failure = response.result, response.url == Constant.failureImageURL {
+                    confirmed()
+                }
+            }
+
+            let imageService = AsyncImageService(cacheType: .none)
+            await imageService.addDelegate(self)
+            await imageService.load(Constant.failureImageURL)
+        }
+    }
 }
 
 // MARK: - Cache -
 
 extension AsyncImageServiceTests {
-	
-	func testCreateDiskCacheDirectory() async throws {
-		try? FileManager.default.removeItem(atPath: AsyncImageService.Constants.diskCacheDirectory.path)
-		_ = AsyncImageService(cacheType: .disk)
-        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
-		XCTAssertTrue(FileManager.default.fileExists(atPath: AsyncImageService.Constants.diskCacheDirectory.path))
-	}
-	
-	func testDiskCache() async throws {
-		let imageService = AsyncImageService(cacheType: .disk)
+
+    @Test func testCreateDiskCacheDirectory() async throws {
+        try? FileManager.default.removeItem(atPath: AsyncImageService.Constant.diskCacheDirectory.path)
+        _ = AsyncImageService(cacheType: .disk)
+        try await Task.sleep(for: .seconds(Constant.waitTime))
+        #expect(FileManager.default.fileExists(atPath: AsyncImageService.Constant.diskCacheDirectory.path))
+    }
+
+    @Test func testDiskCache() async throws {
+        let imageService = AsyncImageService(cacheType: .disk)
         await imageService.clearCache()
-        await imageService.load(Constants.successImageURL1)
-        await imageService.load(Constants.successImageURL2)
-        await imageService.load(Constants.successImageURL3)
-		
-        try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
-        guard let contents = try? FileManager.default.contentsOfDirectory(at: AsyncImageService.Constants.diskCacheDirectory, includingPropertiesForKeys: nil) else { return }
-        
-        guard contents.count == 3 else {
-            XCTAssertEqual(contents.count, 3)
-            return
-        }
-	}
+        await imageService.load(Constant.successImageURL1)
+        await imageService.load(Constant.successImageURL2)
+        await imageService.load(Constant.successImageURL3)
+        let contents = try FileManager.default.contentsOfDirectory(at: AsyncImageService.Constant.diskCacheDirectory, includingPropertiesForKeys: nil)
+        #expect(contents.count == 3)
+    }
 }
 
-// MARK: - Image Handling -
+// MARK: - Delegate -
 
 extension AsyncImageServiceTests: AsyncImageServiceDelegate {
-    
+
     func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
-        if case .success = response.result, response.url == Constants.successImageURL1 {
-            self.testLoadSuccessExpectation?.fulfill()
-        } else if case .failure = response.result, response.url == Constants.failureImageURL {
-            self.testLoadFailureExpectation?.fulfill()
-        }
+        delegateHandler?(response)
     }
 }

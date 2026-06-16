@@ -10,6 +10,7 @@ import UIKit
 ///
 /// UI for the sample application.
 ///
+@MainActor
 final class SampleViewController: UIViewController {
 
     // MARK: - Constants -

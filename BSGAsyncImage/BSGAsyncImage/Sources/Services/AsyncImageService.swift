@@ -26,7 +26,7 @@ public final actor AsyncImageService: AsyncImageServiceProtocol {
 	
     // MARK: - Constants -
     
-	public struct Constants {
+	public struct Constant {
 		/// The directory used when caching to disk.
 		public static let diskCacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("bsg/images")
 	}
@@ -117,7 +117,7 @@ extension AsyncImageService {
 	///
 	private func createCacheDirectory() {
 		do {
-			try fileManager.createDirectory(at: Constants.diskCacheDirectory, withIntermediateDirectories: true, attributes: [:])
+			try fileManager.createDirectory(at: Constant.diskCacheDirectory, withIntermediateDirectories: true, attributes: [:])
 		} catch {
 			fatalError("Invalid disk cache directory.")
 		}
@@ -135,7 +135,7 @@ extension AsyncImageService {
 		case .memory: memoryCache.setObject(image, forKey: imageName as NSString)
 		case .disk:
 			let imageData = image.jpegData(compressionQuality: 1.0)
-			let filePath = Constants.diskCacheDirectory.appendingPathComponent(imageName)
+			let filePath = Constant.diskCacheDirectory.appendingPathComponent(imageName)
 			fileManager.createFile(atPath: filePath.path, contents: imageData)
             memoryCache.setObject(image, forKey: imageName as NSString)
 		}
@@ -166,7 +166,7 @@ extension AsyncImageService {
             if let image = memoryCache.object(forKey: imageName as NSString) {
                 return image
             } else {
-                guard let data = fileManager.contents(atPath: Constants.diskCacheDirectory.appendingPathComponent(imageName).path) else { return nil }
+                guard let data = fileManager.contents(atPath: Constant.diskCacheDirectory.appendingPathComponent(imageName).path) else { return nil }
                 return UIImage(data: data)
             }
 		}
@@ -177,7 +177,7 @@ extension AsyncImageService {
 	///
 	public func clearCache() async {
 		memoryCache.removeAllObjects()
-		if let contents = try? fileManager.contentsOfDirectory(at: Constants.diskCacheDirectory, includingPropertiesForKeys: nil) {
+		if let contents = try? fileManager.contentsOfDirectory(at: Constant.diskCacheDirectory, includingPropertiesForKeys: nil) {
 			for file in contents {
 				try? fileManager.removeItem(at: file)
 			}

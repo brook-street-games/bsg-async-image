@@ -1,14 +1,14 @@
 //
 //  SampleView.swift
 //
-//  Created by JechtSh0t on 5/20/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/20/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import SwiftUI
 
 ///
-/// Swift UI wrapper for *SampleViewController*.
+/// SwiftUI wrapper for *SampleViewController*.
 ///
 struct SampleView: UIViewControllerRepresentable {
     

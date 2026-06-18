@@ -1,8 +1,8 @@
 //
 //  SampleViewController.swift
 //
-//  Created by JechtSh0t on 5/20/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/20/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import UIKit
@@ -55,7 +55,6 @@ final class SampleViewController: UIViewController {
 		segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Lexend", size: Constants.fontSize)!, NSAttributedString.Key.foregroundColor: UIColor.systemBackground], for: .normal)
 		segmentedControl.selectedSegmentTintColor = .systemCyan
 		segmentedControl.backgroundColor = segmentedControl.systemBackgroundInverse
-		
 		return segmentedControl
 	}()
 	
@@ -83,9 +82,9 @@ final class SampleViewController: UIViewController {
         super.viewDidLoad()
         setup()
 		
-        let activityIndictor = UIActivityIndicatorView()
-        activityIndictor.color = collectionView.systemBackgroundInverse
-        collectionView.showActivityIndicator(activityIndictor)
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = collectionView.systemBackgroundInverse
+        collectionView.showActivityIndicator(activityIndicator)
         
         Task {
             await viewModel.loadImages()
@@ -160,7 +159,7 @@ extension SampleViewController: UICollectionViewDataSource, UICollectionViewDele
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sampleCell", for: indexPath) as! SampleCell
-		cell.configure(image: viewModel.displayedImages[indexPath.row], imageLoader: viewModel.imageLoader)
+		cell.configure(image: viewModel.displayedImages[indexPath.row], imageService: viewModel.imageService)
         return cell
     }
     
@@ -185,7 +184,6 @@ extension SampleViewController {
 	
 	@objc private func setCacheType(_ sender: UISegmentedControl) {
 		viewModel.setCacheType(index: sender.selectedSegmentIndex)
-		refresh()
 	}
 	
 	@objc private func clearCache() {

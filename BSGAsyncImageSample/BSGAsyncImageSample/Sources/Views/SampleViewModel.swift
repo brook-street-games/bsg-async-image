@@ -1,8 +1,8 @@
 //
 //  SampleViewModel.swift
 //
-//  Created by JechtSh0t on 5/21/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/21/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import Foundation
@@ -26,18 +26,18 @@ final class SampleViewModel {
 	
 	private var images = [SampleImage]()
 	private(set) var displayedImages = [SampleImage]()
-	private lazy var imageLoaderCacheNone = AsyncImageService(cacheType: .none)
-	private lazy var imageLoaderCacheMemory = AsyncImageService(cacheType: .memory)
-	private lazy var imageLoaderCacheDisk = AsyncImageService(cacheType: .disk)
+	private lazy var imageServiceCacheNone = AsyncImageService(cacheType: .none)
+	private lazy var imageServiceCacheMemory = AsyncImageService(cacheType: .memory)
+	private lazy var imageServiceCacheDisk = AsyncImageService(cacheType: .disk)
 	
 	var selectedCacheTypeIndex: Int { UserDefaults.standard.integer(forKey: Constants.cacheTypeKey) }
 	var selectedCacheType: AsyncImageService.CacheType { cacheType(for: selectedCacheTypeIndex) }
 	
-	var imageLoader: AsyncImageService {
+	var imageService: AsyncImageService {
 		switch selectedCacheType {
-		case .none: return imageLoaderCacheNone
-		case .memory: return imageLoaderCacheMemory
-		case .disk: return imageLoaderCacheDisk
+		case .none: return imageServiceCacheNone
+		case .memory: return imageServiceCacheMemory
+		case .disk: return imageServiceCacheDisk
 		}
 	}
 }
@@ -47,7 +47,7 @@ final class SampleViewModel {
 extension SampleViewModel {
 	
 	func loadImages() async {
-		debugPrint("Disk cache directory: \(AsyncImageService.Constant.diskCacheDirectory)")
+		debugPrint("Disk cache directory: \(imageService.cacheDirectory)")
         guard let (data, _) = try? await URLSession(configuration: .ephemeral).data(from: Constants.sampleImageURL) else { return }
         guard let images = try? JSONDecoder().decode(Array<SampleImage>.self, from: data) else { return }
         debugPrint("Loaded \(images.count) images from \(Constants.sampleImageURL)")
@@ -79,7 +79,7 @@ extension SampleViewModel {
 	
 	func clearCache() {
         Task {
-            await imageLoader.clearCache()
+            await imageService.clearCache()
         }
 	}
 }

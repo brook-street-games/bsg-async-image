@@ -1,7 +1,7 @@
 //
 //  AsyncImageView.swift
 //
-//  Created by JechtSh0t on 5/21/23.
+//  Created by JechtShot on 5/21/23.
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
@@ -11,7 +11,7 @@ import UIKit
 /// A view used to load and cache asynchronous images in UIKit.
 ///
 @MainActor
-public class AsyncImageView<Content: UIView>: UIImageView {
+public class AsyncImageView: UIView {
     
     // MARK: - Phase -
     
@@ -23,28 +23,30 @@ public class AsyncImageView<Content: UIView>: UIImageView {
     
     // MARK: - Properties -
     
-    private let url: URL
     private let imageService: AsyncImageServiceProtocol
-    private let phaseHandler: (Phase) -> Content
-    private var phase: Phase = .empty
-    
+    private let phaseHandler: (Phase) -> UIView
+    private var phase: Phase = .empty {
+        didSet { refresh() }
+    }
+    private var task: Task<Void, Never>?
+    private let url: URL
+
     // MARK: - Initializers -
     
-    public init(url: URL, imageService: AsyncImageServiceProtocol = AsyncImageService.shared, phaseHandler: @escaping (Phase) -> Content) {
+    public init(url: URL, imageService: AsyncImageServiceProtocol = AsyncImageService.shared, phaseHandler: @escaping (Phase) -> UIView) {
         self.url = url
         self.imageService = imageService
         self.phaseHandler = phaseHandler
-        
         super.init(frame: CGRect.zero)
-        
-        Task {
-            await imageService.addDelegate(self)
-            await refresh()
-        }
+        refresh()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        task?.cancel()
     }
 }
 
@@ -53,45 +55,31 @@ public class AsyncImageView<Content: UIView>: UIImageView {
 extension AsyncImageView {
     
     ///
-    /// Load an image ansynchronously. If the image has been previously cached, the cached image will be used.
+    /// Load an image asynchronously. If the image has been previously cached, the cached image will be used.
     ///
     public func load() {
-        phase = .empty
-        Task {
-            await imageService.load(url)
+        task?.cancel()
+        task = Task { [weak self, imageService, url] in
+            do {
+                let image = try await imageService.load(url)
+                guard let self else { return }
+                self.phase = .success(image)
+            } catch {
+                guard let self, !Task.isCancelled else { return }
+                self.phase = .failure(error)
+            }
         }
     }
-}
-
-// MARK: - Refresh -
-
-extension AsyncImageView {
     
     ///
-    /// Refresh subviews when the phase changes.
+    /// Refresh subviews to reflect the current phase.
     ///
-    private func refresh() async {
+    private func refresh() {
         for subview in subviews { subview.removeFromSuperview() }
         let phaseView = phaseHandler(phase)
         phaseView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(phaseView)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[phaseView]|", metrics: nil, views: ["phaseView": phaseView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[phaseView]|", metrics: nil, views: ["phaseView": phaseView]))
-    }
-}
-
-// MARK: - Image Handling -
-
-extension AsyncImageView: AsyncImageServiceDelegate {
-    
-    nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
-        Task { @MainActor in
-            guard response.url == self.url else { return }
-            switch response.result {
-            case .success(let image): self.phase = .success(image)
-            case .failure(let error): self.phase = .failure(error)
-            }
-            await refresh()
-        }
     }
 }

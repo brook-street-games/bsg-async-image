@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/639b2a2a-33e7-4c0c-a49d-6a4fcd126bfe
 ## Usage
 
 ```swift
-// Import the framework.
+// Import the library.
 import BSGAsyncImage
 ```
 

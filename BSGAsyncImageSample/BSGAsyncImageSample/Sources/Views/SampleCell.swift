@@ -1,8 +1,8 @@
 //
 //  SampleCell.swift
 //
-//  Created by JechtSh0t on 5/20/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/20/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import UIKit
@@ -23,7 +23,7 @@ final class SampleCell: UICollectionViewCell {
     // MARK: - Properties -
     
     private var image: SampleImage!
-    private var imageLoader: AsyncImageService!
+    private var imageService: AsyncImageService!
 	
     // MARK: - UI -
     
@@ -47,9 +47,9 @@ final class SampleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-	func configure(image: SampleImage, imageLoader: AsyncImageService) {
+	func configure(image: SampleImage, imageService: AsyncImageService) {
         self.image = image
-        self.imageLoader = imageLoader
+        self.imageService = imageService
 		
 		backgroundColor = systemBackgroundInverse
         roundCorners()
@@ -80,8 +80,8 @@ final class SampleCell: UICollectionViewCell {
 
 extension SampleCell {
     
-    private func createImageView() -> AsyncImageView<UIView> {
-        return AsyncImageView(url: image.url, imageService: imageLoader) { phase in
+    private func createImageView() -> AsyncImageView {
+        return AsyncImageView(url: image.url, imageService: imageService) { phase in
             switch phase {
             case .empty:
                 let activityIndicator = UIActivityIndicatorView(style: .medium)

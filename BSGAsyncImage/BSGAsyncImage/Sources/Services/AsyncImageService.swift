@@ -1,52 +1,59 @@
 //
 //  AsyncImageService.swift
 //
-//  Created by JechtSh0t on 5/20/23.
+//  Created by JechtShot on 5/20/23.
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
+import CryptoKit
 import Foundation
 import UIKit
 
+public protocol AsyncImageServiceProtocol: Sendable {
+    func load(_ url: URL) async throws -> UIImage
+    func clearCache() async
+}
+
 ///
-/// A class used for asynchronous image loading.
+/// A service for asynchronous image loading.
 ///
 public final actor AsyncImageService: AsyncImageServiceProtocol {
-	
-    // MARK: - Constants -
-    
-	public struct Constants {
-		/// The directory used when caching to disk.
-		public static let diskCacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("bsg/images")
-	}
     
     // MARK: - Properties -
-	
-	/// The type of caching used for images.
-	public private(set) var cacheType: CacheType
-	
-	/// The session used to loading all images.
-	private lazy var session = URLSession(configuration: .ephemeral)
-	/// The file manager instance used for caching to disk.
-	private lazy var fileManager = FileManager.default
-	/// Contains all URLs with an open data task.
-    private var activeRequests = Set<URL>()
-	/// Contains all images cached in memory.
-	private var memoryCache = NSCache<NSString, UIImage>()
-    /// Objects to alert when loading is complete.
-    private let delegates = MulticastDelegate<AsyncImageServiceDelegate>()
-	
+
+    /// The directory used when caching to disk.
+    public nonisolated let cacheDirectory: URL = {
+        let base = FileManager.default
+            .urls(for: .cachesDirectory, in: .userDomainMask)
+            .first
+            ?? FileManager.default.temporaryDirectory
+        return base.appendingPathComponent("bsg/images")
+    }()
+    /// The type of caching used for images.
+    public nonisolated let cacheType: CacheType
+    
+    /// Contains all tasks that are in progress.
+    private var activeTasks = [URL: Task<UIImage, Error>]()
+    /// The file manager instance used for caching to disk.
+    private let fileManager = FileManager.default
+    /// Contains all images cached in memory.
+    private var memoryCache = NSCache<NSString, UIImage>()
+    /// The session used to load images.
+    private lazy var session = URLSession(configuration: .ephemeral)
+   
     // MARK: - Shared -
     
-    public static var shared = AsyncImageService(cacheType: .disk)
+    public static let shared = AsyncImageService(cacheType: .disk)
     
 	// MARK: - Initializers -
 	
 	public init(cacheType: CacheType) {
 		self.cacheType = cacheType
         if cacheType == .disk {
-            Task {
-                await createCacheDirectory()
+            do {
+                try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true, attributes: [:])
+            } catch {
+                debugPrint("Failed to create disk cache directory.")
             }
         }
 	}
@@ -55,37 +62,34 @@ public final actor AsyncImageService: AsyncImageServiceProtocol {
 // MARK: - Image Load -
 
 extension AsyncImageService {
-	
+
     ///
-    /// Load an image. If *cacheType* is set to a value other than none and the image has been previously loaded, it will be taken from cache. This method does not return a value, and instead alerts all delegates when complete.
-    ///  - parameter url: The source URL of the image.
+    /// Load an image. If caching is enabled and the image is in the cache, the cached image is returned. Multiple callers requesting the same URL share a request.
+    /// - parameter url: A source URL.
+    /// - returns: An image.
     ///
-	public func load(_ url: URL) async {
-		
-        if let image = await loadFromCache(url) {
-            await alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
-			return
-		}
-		
-        guard !activeRequests.contains(url) else {
-			return
-		}
-        activeRequests.insert(url)
-		
-        do {
-            let (data, _) = try await session.data(from: url)
-            activeRequests.remove(url)
-            
-            guard let image = UIImage(data: data) else {
-                await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.invalidImageData)))
-                return
-            }
-            
-            await saveToCache(image, url: url)
-            await alertDelegates(response: AsyncImageResponse(url: url, result: .success(image)))
-        } catch {
-            await alertDelegates(response: AsyncImageResponse(url: url, result: .failure(AsyncImageError.requestFailed(error))))
+    public func load(_ url: URL) async throws -> UIImage {
+        if let image = loadFromCache(url) {
+            return image
         }
+
+        if let task = activeTasks[url] {
+            return try await task.value
+        }
+
+        let task = Task<UIImage, Error> {
+            let (data, _) = try await session.data(from: url)
+            guard let image = UIImage(data: data) else {
+                throw AsyncImageError.decodingFailed
+            }
+            saveToCache(image, data: data, url: url)
+            return image
+        }
+        activeTasks[url] = task
+        defer {
+            activeTasks[url] = nil
+        }
+        return try await task.value
     }
 }
 
@@ -93,123 +97,74 @@ extension AsyncImageService {
 
 extension AsyncImageService {
 	
-    public enum CacheType {
+    public enum CacheType: Sendable {
         /// Images will not be cached.
         case none
         /// Images will be cached to memory.
         case memory
-        /// Images will be cached to disk under *documents/images*.
+        /// Images will be cached to both memory and disk.
         case disk
     }
-    
-	///
-	/// Create a directory for disk cache.
-	///
-	private func createCacheDirectory() async {
-		do {
-			try fileManager.createDirectory(at: Constants.diskCacheDirectory, withIntermediateDirectories: true, attributes: [:])
-		} catch {
-			fatalError("Invalid disk cache directory.")
-		}
-	}
 	
 	///
-	/// Save an image to cache.
+	/// Save an image to the cache.
 	/// - parameter image: An image.
-	/// - parameter url: The source URL of the image.
+    /// - parameter data: Raw image data.
+	/// - parameter url: A source URL.
 	///
-	private func saveToCache(_ image: UIImage, url: URL) async {
-		
-		guard let imageName = fileName(for: url) else { return }
-		
+    private func saveToCache(_ image: UIImage, data: Data, url: URL) {
+        let key = cacheKey(for: url)
 		switch cacheType {
 		case .none: break
-		case .memory: memoryCache.setObject(image, forKey: imageName as NSString)
 		case .disk:
-			let imageData = image.jpegData(compressionQuality: 1.0)
-			let filePath = Constants.diskCacheDirectory.appendingPathComponent(imageName)
-			fileManager.createFile(atPath: filePath.path, contents: imageData)
-            memoryCache.setObject(image, forKey: imageName as NSString)
+			let filePath = cacheDirectory.appendingPathComponent(key)
+			fileManager.createFile(atPath: filePath.path, contents: data)
+            fallthrough
+        case .memory:
+            memoryCache.setObject(image, forKey: key as NSString)
 		}
 	}
+    
+    ///
+    /// Hash a URL to create a cache key.
+    /// - parameter url: A source URL.
+    /// - returns: A cache key.
+    ///
+    private func cacheKey(for url: URL) -> String {
+        let data = Data(url.absoluteString.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.map { String(format: "%02x", $0) }.joined()
+    }
 	
 	///
-	/// Load an image from cache.
-	/// - parameter url: The source URL of the image.
+	/// Load an image from the cache.
+	/// - parameter url: A source URL.
 	/// - returns: A cached image.
 	///
-	private func loadFromCache(_ url: URL) async -> UIImage? {
-		
-		guard let imageName = fileName(for: url) else { return nil }
-		
+	private func loadFromCache(_ url: URL) -> UIImage? {
+		let key = cacheKey(for: url)
 		switch cacheType {
 		case .none: return nil
-		case .memory: return memoryCache.object(forKey: imageName as NSString)
+		case .memory: return memoryCache.object(forKey: key as NSString)
 		case .disk:
-            if let i = memoryCache.object(forKey: imageName as NSString) {
-                return i
+            if let image = memoryCache.object(forKey: key as NSString) {
+                return image
             } else {
-                guard let data = fileManager.contents(atPath: Constants.diskCacheDirectory.appendingPathComponent(imageName).path) else { return nil }
+                guard let data = fileManager.contents(atPath: cacheDirectory.appendingPathComponent(key).path) else { return nil }
                 return UIImage(data: data)
             }
 		}
 	}
 	
 	///
-	/// Clear all caches.
+	/// Clear all cached images.
 	///
 	public func clearCache() async {
 		memoryCache.removeAllObjects()
-        
-		if let contents = try? fileManager.contentsOfDirectory(at: Constants.diskCacheDirectory, includingPropertiesForKeys: nil) {
+		if let contents = try? fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil) {
 			for file in contents {
 				try? fileManager.removeItem(at: file)
 			}
 		}
 	}
-}
-
-// MARK: - File Name -
-
-extension AsyncImageService {
-	
-	///
-	/// Remove forward slashes from URL to create a disk-friendly file name.
-	/// - parameter url: A source URL.
-	/// - returns: A file name.
-	///
-	private func fileName(for url: URL) -> String? {
-		return url.path.replacingOccurrences(of: "/", with: "_")
-	}
-}
-
-// MARK: - Delegates -
-
-extension AsyncImageService {
-    
-    ///
-    /// Add a delegate to receive images.
-    /// - parameter delegate: The object that will be added.
-    ///
-    public func addDelegate(_ delegate: AsyncImageServiceDelegate) async {
-        await delegates.add(delegate)
-    }
-    
-    ///
-    /// Remove a delegate that will no longer receive images.
-    /// - parameter delegate: The object that will be removed.
-    ///
-    public func removeDelegate(_ delegate: AsyncImageServiceDelegate) async {
-        await delegates.remove(delegate)
-    }
-    
-    ///
-    /// Alert all delegates of a response.
-    /// - parameter response: A response containing a loaded image.
-    ///
-    private func alertDelegates(response: AsyncImageResponse) async {
-        await delegates.invoke { delegate in
-            delegate.asyncImageService(self, didReceiveResponse: response)
-        }
-    }
 }

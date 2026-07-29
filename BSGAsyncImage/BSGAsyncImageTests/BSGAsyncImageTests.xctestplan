@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "1FBBB595-1ABD-446E-9337-FA28D77DC0E0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:BSGAsyncImage.xcodeproj",
+        "identifier" : "7A7F09BA26D1C919006206A3",
+        "name" : "BSGAsyncImageTests"
+      }
+    }
+  ],
+  "version" : 1
+}

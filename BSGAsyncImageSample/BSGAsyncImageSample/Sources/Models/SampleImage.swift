@@ -1,8 +1,8 @@
 //
 //  SampleImage.swift
 //
-//  Created by JechtSh0t on 5/21/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/21/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import Foundation

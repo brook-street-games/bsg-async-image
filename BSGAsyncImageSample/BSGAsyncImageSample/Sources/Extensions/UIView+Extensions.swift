@@ -1,8 +1,8 @@
 //
 //  UIView+Extensions.swift
 //
-//  Created by JechtSh0t on 5/21/23.
-//  Copyright © 2023 Brook Street Games LLC. All rights reserved.
+//  Created by JechtShot on 5/21/23.
+//  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 
 import UIKit
@@ -32,13 +32,10 @@ extension UIView {
     
     ///
     /// Show an activity indicator.
-    ///
     /// - parameter activityIndicator: The activity indicator to show.
     ///
     public func showActivityIndicator(_ activityIndicator: UIActivityIndicatorView) {
-        
         hideActivityIndicator()
-        
         addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -48,7 +45,7 @@ extension UIView {
     }
     
     ///
-    /// Hide and remove an existing activity indicator.
+    /// Remove an existing activity indicator.
     ///
     public func hideActivityIndicator() {
         if let activityIndicator = subviews.first(where: { $0.accessibilityIdentifier == activityIndicatorIdentifier }) as? UIActivityIndicatorView {

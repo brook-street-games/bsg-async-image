@@ -102,9 +102,9 @@ do {
 
 By default images are cached to disk. This can be changed when customizing a service.
 
-* **None**. Images are not cached.
-* **Memory**. Images are cached to memory.
 * **Disk**. Images are cached to disk (***/bsg/images***).
+* **Memory**. Images are cached to memory.
+* **None**. Images are not cached.
 
 ## Author
 

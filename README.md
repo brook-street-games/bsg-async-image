@@ -1,16 +1,14 @@
 # BSGAsyncImage
 
-## Overview
-
-An iOS framework for asynchronous image loading, and caching.
+A drop-in replacement for Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage) with automatic caching.
 
 https://github.com/user-attachments/assets/639b2a2a-33e7-4c0c-a49d-6a4fcd126bfe
 
-## Installation
-
-### Requirements
+## Requirements
 
 + iOS 15+
+
+## Installation
 
 ### Swift Package Manager
 
@@ -29,51 +27,49 @@ import BSGAsyncImage
 
 ### SwiftUI
 
-**AsyncImage** conforms to **View** with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
-By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
+**AsyncImage** conforms to **View** and mirrors the API of [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage).
 
 ```swift
 AsyncImage(url: url) { phase in
 	switch phase {
-	// Configure a view for when the image is loading.
+	// Configure a view for when the image load is in progress.
 	case .empty: 
 		ProgressView()
 			.foregroundStyle(Color.black)
-	// Configure a view for when the image loads.
+	// Configure a view for when the image load succeeds.
 	case .success(let image): 
 		image
 			.resizable()
-	// Configure a way for when the image fails to load.
+	// Configure a view for when the image load fails.
 	case .failure(let error): 
 		Rectangle()
-			.foregroundStyle(Color.black)
+			.foregroundStyle(Color.red)
 	}
 }
 ```
 
 ### UIKit
 
-**AsyncImageView** is a subclass of **UIImageView** built with a similar style to Apple's [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
-By default images will cache to disk. Optionally provide an **AsyncImageService** to customize this.
+**AsyncImageView** is a subclass of **UIImageView** and mirrors the API of [AsyncImage](https://developer.apple.com/documentation/swiftui/asyncimage). 
 
 ```swift
 let asyncImageView = AsyncImageView(url: url) { phase in
 	switch phase {
-	// Configure a view for when the image is loading.
+	// Configure a view for when the image load is in progress.
 	case .empty:
 		let activityIndicator = UIActivityIndicatorView(style: .medium)
 		activityIndicator.color = .black
 		activityIndicator.startAnimating()
 		return activityIndicator
-	// Configure a view for when the image loads.
+	// Configure a view for when the image load succeeds.
 	case .success(let image):
 		let imageView = UIImageView(image: image)
 		imageView.contentMode = .scaleAspectFill
 		return imageView
-	// Configure a way for when the image fails to load.
+	// Configure a view for when the image load fails.
 	case .failure:
 		let view = UIView()
-		view.backgroundColor = .black
+		view.backgroundColor = .red
 		return view
 	}
 }
@@ -83,43 +79,33 @@ view.addSubview(asyncImageView)
 asyncImageView.load()
 ```
 
+## Customization
+
 ### Service
 
-**AsyncImageService** can be used directly to handle receiving images in cases where the views above are not sufficient.
+**AsyncImageService** can be provided as a parameter to either of the views above for more control. It can also be used on its own to handle receiving images directly.
 
 ```swift
 // Create an instance of the service.
-let asyncImageService = AsyncImageService(cacheType: .disk)
+let asyncImageService = AsyncImageService(cacheType: .memory)
 
-// Add a delegate. A multicast delegate pattern is used.
-await asyncImageService.addDelegate(self)
-}
 // Load an image.
-await asyncImageService.load(url)
-
-// Handle the result by conforming to *AsyncImageServiceDelegate*. Since this method will be called for every image that is loaded, the URL should be checked before using the image. 
-nonisolated public func asyncImageService(_ service: AsyncImageService, didReceiveResponse response: AsyncImageResponse) {
-	Task { @MainActor in
-		// Check that the URLs match.
-		guard response.url == self.url else { return }
-		switch response.result {
-		case .success(let image): 
-			// Handle the image. 
-		case .failure(let error): 
-			// Handle the error.
-		}
-	}
+do {
+	let image = try await asyncImageService.load(url)
+	// Handle the image.
+} catch {
+	// Handle the error.
 }
 ```
 
-## Customization
-
 ### Cache Types
 
-* **None**. Images will not be cached.
-* **Memory**. Images will be cached to memory.
-* **Disk**. Images will be cached to disk in the caches directory under ***/bsg/images***, and to memory.
+By default images are cached to disk. This can be changed when customizing a service.
+
+* **None**. Images are not cached.
+* **Memory**. Images are cached to memory.
+* **Disk**. Images are cached to disk (***/bsg/images***).
 
 ## Author
 
-Brook Street Games LLC
+Brook Street Games

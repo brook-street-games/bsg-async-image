@@ -1,7 +1,7 @@
 //
 //  AsyncImageViewTests.swift
 //
-//  Created by JechtSh0t on 5/22/23.
+//  Created by JechtShot on 5/22/23.
 //  Copyright © 2023 Brook Street Games. All rights reserved.
 //
 

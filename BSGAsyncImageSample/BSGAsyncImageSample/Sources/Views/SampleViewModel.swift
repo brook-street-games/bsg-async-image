@@ -19,7 +19,7 @@ final class SampleViewModel {
 	private struct Constants {
 		static let imageCount = 30
 		static let cacheTypeKey = "cacheType"
-		static let sampleImageURL = URL(string: "https://brookstreetgames.com/images.txt")!
+		static let sampleImageURL = URL(string: "https://brookstreetgames.com/images.json")!
 	}
 	
 	// MARK: - Properties -
